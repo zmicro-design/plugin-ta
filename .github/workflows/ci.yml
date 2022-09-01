@@ -60,4 +60,5 @@ jobs:
 
       - name: Show Version
         run: |
+          export PATH=/usr/local/lib/zmicro/bin:$PATH
           ta version
