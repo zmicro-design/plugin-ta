@@ -1,0 +1,33 @@
+#!/bin/bash
+
+project::find_command() {
+  local name=$1
+  local path=$PWD/bin/zmicro/$name
+  if [ ! -f "$path" ]; then
+    echo ""
+    return
+  fi
+
+  echo $path
+}
+
+project::run_command() {
+  local name=$1
+  local args=${@:2}
+
+  if [ -z "$name" ]; then
+    log::error "command is required"
+    exit 1
+  fi
+
+  local command=$(project::find_command $name)
+  if [ -z "$command" ]; then
+    log::error "cannot found command: ${name}"
+    exit 1
+  fi
+
+  bash $command $args
+}
+
+export -f project::find_command
+export -f project::run_command

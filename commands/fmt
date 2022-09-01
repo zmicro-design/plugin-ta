@@ -1,0 +1,39 @@
+#!/bin/bash
+
+help() {
+  echo "Fmt - project fmt"
+  echo ""
+  echo "Usage:"
+  echo "  ta fmt"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  which node >>/dev/null
+  if [ $? -ne 0 ]; then
+    log::info "[$(timestamp)] node.js is not installed, try to install it ..."
+    zmicro package install nodejs
+
+    export NODE_HOME=/usr/local/node
+    export NODE_USER_HOME=$HOME/.node
+    export PATH=$NODE_USER_HOME/bin:$NODE_HOME/bin:$PATH
+  fi
+
+  which gpm >>/dev/null
+  if [ $? -ne 0 ]; then
+    log::info "[$(timestamp)] gpm is not installed, try to install it ..."
+    npm i -g gpm
+  fi
+
+  gpm fmt
+}
+
+run() {
+  core $@
+}
+
+run $@
