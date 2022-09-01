@@ -1,1 +1,5 @@
+#!/bin/bash
+
 export PLUGIN_TA_NAME=ta
+
+export PLUGIN_TA_NODE_VERSION=v16.17.0

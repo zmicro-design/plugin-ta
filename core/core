@@ -4,4 +4,29 @@ ta::helloworld() {
   echo "helloworld"
 }
 
+ta::dev() {
+  which node >>/dev/null
+  if [ $? -ne 0 ]; then
+    log::info "[$(timestamp)] node.js is not installed, try to install it ..."
+    zmicro package install nodejs
+
+    export NODE_HOME=/usr/local/node
+    export NODE_USER_HOME=$HOME/.node
+    export PATH=$NODE_USER_HOME/bin:$NODE_HOME/bin:$PATH
+  fi
+
+  npm run build
+  if [ $? -ne 0 ]; then
+    log::error "[$(timestamp)] failed to build: npm run build failed"
+    exit 1
+  fi
+
+  npm run dist --if-present
+  if [ $? -ne 0 ]; then
+    log::error "[$(timestamp)] failed to build: npm run dist failed"
+    exit 1
+  fi
+}
+
 export -f ta::helloworld
+export -f ta::dev
