@@ -16,8 +16,8 @@ ta::prepare() {
   fi
 
   local current_node_version=$(node -v)
-  if [ "${current_node_version}" != "$PLUGIN_TA_NODE_VERSION" ]; then
-    log::info "Your node vrsion is $(color::red ${current_node_version}), but ta system require node($(color::green ${PLUGIN_TA_NODE_VERSION}))"
+  if [ "$(version::compare_gt ${current_node_version} $PLUGIN_TA_NODE_VERSION)" = "false" ]; then
+    log::info "Your node vrsion is $(color::red ${current_node_version}), but ta system require version at least $(color::green ${PLUGIN_TA_NODE_VERSION})"
     os::inquirer value "yesno" "Are you sure to install node($(color::green ${PLUGIN_TA_NODE_VERSION})) right now ?" true false
     if [ "$value" != "true" ]; then
       exit 0
