@@ -15,7 +15,7 @@ core() {
 
   log::info "[$(timestamp)] start to build ta ..."
 
-  ta::dev
+  ta::build
 
   log::info "[$(timestamp)] succeed to build ta."
 }

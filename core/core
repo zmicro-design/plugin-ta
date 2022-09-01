@@ -4,7 +4,7 @@ ta::helloworld() {
   echo "helloworld"
 }
 
-ta::dev() {
+ta::build() {
   which node >>/dev/null
   if [ $? -ne 0 ]; then
     log::info "[$(timestamp)] node.js is not installed, try to install it ..."
@@ -29,4 +29,4 @@ ta::dev() {
 }
 
 export -f ta::helloworld
-export -f ta::dev
+export -f ta::build
