@@ -1,0 +1,34 @@
+#!/bin/bash
+
+name() {
+  local version=$(plugin::get_version $PLUGIN_TA_NAME)
+  echo "Ta ($(color::success $version))"
+}
+
+description() {
+  echo "Ta Development CLI "
+}
+
+usage() {
+  echo "Usage:"
+  echo "  ta bootstrap           - Setup environment quickly"
+  echo "  ta dev                 - Project dev"
+  echo "  ta build               - Project build"
+  echo "  ta fmt                 - Project format"
+  echo "  ta commit              - Project commit"
+  echo "  ta help                - Show help"
+}
+
+core() {
+  name
+  echo ""
+  description
+  echo ""
+  usage
+}
+
+run() {
+  core $@
+}
+
+run $@

@@ -18,26 +18,17 @@ wget -qO- https://raw.githubusercontent.com/zmicro-design/plugin-ta/master/insta
 ## Usage
 
 ```markdown
-Go Version Manager (v1.0.6)
+Ta (v0.0.3)
 
-Go Version Manager is a tool for managing multiple Go versions.
+Ta Development CLI 
 
 Usage:
-  ta install <version>   - Install Go version
-  ta use <version>       - Use Go version
-  ta remove <version>    - Remove Go version
-  ta ls                  - List all Go versions
-  ta ls-remote           - Show current Go version
-  ta current             - Show current Go version
+  ta bootstrap           - Setup environment quickly
+  ta dev                 - Project dev
+  ta build               - Project build
+  ta fmt                 - Project format
+  ta commit              - Project commit
   ta help                - Show help
-
-Example:
-  ta install v1.18
-  ta use v1.18
-  ta remove v1.18
-  ta ls
-  ta ls-remote
-  ta current
 ```
 
 ## License
