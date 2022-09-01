@@ -1,0 +1,9 @@
+#!/bin/bash
+
+ta::fmt() {
+  ta::prepare
+
+  gpm fmt
+}
+
+export -f ta::fmt

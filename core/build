@@ -1,0 +1,19 @@
+#!/bin/bash
+
+ta::build() {
+  ta::prepare
+
+  npm run build
+  if [ $? -ne 0 ]; then
+    log::error "[$(timestamp)] failed to build: npm run build failed"
+    exit 1
+  fi
+
+  npm run dist --if-present
+  if [ $? -ne 0 ]; then
+    log::error "[$(timestamp)] failed to build: npm run dist failed"
+    exit 1
+  fi
+}
+
+export -f ta::build

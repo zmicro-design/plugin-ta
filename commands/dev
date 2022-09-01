@@ -13,30 +13,7 @@ core() {
     exit 0
   fi
 
-  which node >>/dev/null
-  if [ $? -ne 0 ]; then
-    log::info "node.js is not installed, try to install it ..."
-    zmicro package install nodejs
-
-    export NODE_HOME=/usr/local/node
-    export NODE_USER_HOME=$HOME/.node
-    export PATH=$NODE_USER_HOME/bin:$NODE_HOME/bin:$PATH
-  fi
-
-  local current_node_version=$(node -v)
-  if [ "${current_node_version}" != "$PLUGIN_TA_NODE_VERSION" ]; then
-    which nvm >>/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-      log::info "nvm is not installed, try to install it ..."
-      zmicro plugin install nvm
-    fi
-
-    nvm use $PLUGIN_TA_NODE_VERSION
-  fi
-
-  npm run start --if-present
-
-  npm run dev --if-present
+  ta::dev
 }
 
 run() {

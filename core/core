@@ -4,7 +4,7 @@ ta::helloworld() {
   echo "helloworld"
 }
 
-ta::build() {
+ta::prepare() {
   which node >>/dev/null
   if [ $? -ne 0 ]; then
     log::info "[$(timestamp)] node.js is not installed, try to install it ..."
@@ -15,18 +15,35 @@ ta::build() {
     export PATH=$NODE_USER_HOME/bin:$NODE_HOME/bin:$PATH
   fi
 
-  npm run build
-  if [ $? -ne 0 ]; then
-    log::error "[$(timestamp)] failed to build: npm run build failed"
-    exit 1
+  local current_node_version=$(node -v)
+  if [ "${current_node_version}" != "$PLUGIN_TA_NODE_VERSION" ]; then
+    log::info "Your node vrsion is $(color::red ${current_node_version}), but ta system require node($(color::green ${PLUGIN_TA_NODE_VERSION}))"
+    os::inquirer value "yesno" "Are you sure to install node($(color::green ${PLUGIN_TA_NODE_VERSION})) right now ?" true false
+    if [ "$value" != "true" ]; then
+      exit 0
+    fi
+
+    which nvm >>/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      log::info "nvm is not installed, try to install it ..."
+      zmicro plugin install nvm
+    fi
+
+    nvm use $PLUGIN_TA_NODE_VERSION
   fi
 
-  npm run dist --if-present
+  which rimraf >>/dev/null
   if [ $? -ne 0 ]; then
-    log::error "[$(timestamp)] failed to build: npm run dist failed"
-    exit 1
+    log::info "[$(timestamp)] rimraf is not installed, try to install it ..."
+    npm i -g rimraf
+  fi
+
+  which gpm >>/dev/null
+  if [ $? -ne 0 ]; then
+    log::info "[$(timestamp)] gpm is not installed, try to install it ..."
+    npm i -g gpm
   fi
 }
 
 export -f ta::helloworld
-export -f ta::build
+export -f ta::prepare

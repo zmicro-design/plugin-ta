@@ -13,25 +13,7 @@ core() {
     exit 0
   fi
 
-  which node >>/dev/null
-  if [ $? -ne 0 ]; then
-    log::info "[$(timestamp)] node.js is not installed, try to install it ..."
-    zmicro package install nodejs
-
-    export NODE_HOME=/usr/local/node
-    export NODE_USER_HOME=$HOME/.node
-    export PATH=$NODE_USER_HOME/bin:$NODE_HOME/bin:$PATH
-  fi
-
-  which rimraf >>/dev/null
-  if [ $? -ne 0 ]; then
-    log::info "[$(timestamp)] rimraf is not installed, try to install it ..."
-    npm i -g rimraf
-  fi
-
-  npm run clear --if-present
-
-  npm i --legacy-peer-deps
+  ta::bootstrap
 }
 
 run() {

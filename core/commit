@@ -1,0 +1,9 @@
+#!/bin/bash
+
+ta:commit() {
+  ta::prepare
+
+  gpm commit
+}
+
+export -f ta:commit

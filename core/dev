@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ta::dev() {
+  ta::prepare
+
+  npm run start --if-present
+
+  npm run dev --if-present
+}
+
+export -f ta::dev

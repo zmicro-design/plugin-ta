@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ta::bootstrap() {
+  ta::prepare
+
+  npm run clear --if-present
+
+  npm i --legacy-peer-deps
+}
+
+export -f ta::bootstrap
