@@ -1,0 +1,9 @@
+#!/bin/bash
+
+function test_ta::helloworld() {
+  testing::expect \
+    "${FUNCNAME[0]}" \
+    "to_equal" \
+    "helloworld" \
+    "$(ta::helloworld)"
+}

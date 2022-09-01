@@ -1,7 +1,7 @@
 #!/bin/bash
 
 help() {
-  echo "Build - project build"
+  echo "Build - ta build"
   echo ""
   echo "Usage:"
   echo "  ta build [args...]"
@@ -13,7 +13,7 @@ core() {
     exit 0
   fi
 
-  log::info "[$(timestamp)] start to build project ..."
+  log::info "[$(timestamp)] start to build ta ..."
 
   which node >>/dev/null
   if [ $? -ne 0 ]; then
@@ -37,7 +37,7 @@ core() {
     exit 1
   fi
 
-  log::info "[$(timestamp)] succeed to build project."
+  log::info "[$(timestamp)] succeed to build ta."
 }
 
 run() {

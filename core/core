@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ta::helloworld() {
+  echo "helloworld"
+}
+
+export -f ta::helloworld
