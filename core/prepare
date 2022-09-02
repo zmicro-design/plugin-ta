@@ -53,7 +53,7 @@ ta::prepare() {
   which gpm >>/dev/null
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] gpm is not installed, try to install it ..."
-    npm i -g gpm
+    npm i -g @cliz/gpm
   fi
 }
 
