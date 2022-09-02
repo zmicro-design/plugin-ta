@@ -1,4 +1,4 @@
-FROM node:16.17.0-alpine
+FROM whatwewant/node:v16-2.0.1
 
 LABEL MAINTAINER="Zero<tobewhatwewant@outlook.com>"
 
