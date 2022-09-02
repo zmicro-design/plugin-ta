@@ -1,0 +1,23 @@
+#!/bin/bash
+
+help() {
+  echo "Add - add git repository"
+  echo ""
+  echo "Usage:"
+  echo "  ta add <repository> [args...]"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::add "$@"
+}
+
+run() {
+  core $@
+}
+
+run $@

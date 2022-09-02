@@ -1,0 +1,9 @@
+#!/bin/bash
+
+ta::add() {
+  ta::prepare
+
+  gpm add "$@"
+}
+
+export -f ta::add
