@@ -1,4 +1,4 @@
-FROM node:16.14-alpine
+FROM node:16.17.0-alpine
 
 LABEL MAINTAINER="Zero<tobewhatwewant@outlook.com>"
 
@@ -8,11 +8,7 @@ ENV TZ=Asia/Shanghai
 #   Reference: https://stackoverflow.com/questions/54428608/docker-node-alpine-image-build-fails-on-node-gyp
 RUN apk add --no-cache python3 make g++ git wget curl grep bash
 
-# ENV HTTPS_PROXY http://192.168.31.39:17890
-
-ENV ZMICRO_VERSION=v1.15.23
-
-# Advance System Helper
+# Zmicro
 RUN NO_LOG=true curl -o- https://raw.githubusercontent.com/zcorky/zmicro/master/install | bash
 
 # @FIX NPM 7 break package-lock.json
