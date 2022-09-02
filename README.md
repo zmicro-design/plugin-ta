@@ -1,4 +1,4 @@
-# Ta - Ta Development Plugin for [ZMicro](https://github.com/zcorky/zmicro)
+# Ta - Ta Development CLI
 
 [![Release](https://img.shields.io/github/tag/zmicro-design/plugin-ta.svg?label=Release)](https://github.com/zmicro-design/plugin-ta/tags)
 [![Build Status](https://github.com/zmicro-design/plugin-ta/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/zmicro-design/plugin-ta/actions/workflows/test.yml)
