@@ -6,7 +6,10 @@ name() {
 }
 
 description() {
-  echo "Ta Development CLI "
+  # @TODO
+  config::load_file $PLUGIN_DIR/mod
+
+  echo "$PLUGIN_DESCRIPTION"
 }
 
 usage() {
