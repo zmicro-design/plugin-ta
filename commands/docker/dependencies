@@ -1,0 +1,23 @@
+#!/bin/bash
+
+help() {
+  echo "Docker Dependencies - setup environment"
+  echo ""
+  echo "Usage:"
+  echo "  ta docker dependencies [args...]"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::prepare
+}
+
+run() {
+  core $@
+}
+
+run $@
