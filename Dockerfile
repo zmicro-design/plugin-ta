@@ -1,4 +1,4 @@
-FROM whatwewant/node:v16-2.0.1
+FROM whatwewant/node:v16-2.0.2
 
 LABEL MAINTAINER="Zero<tobewhatwewant@outlook.com>"
 
@@ -36,6 +36,8 @@ RUN zmicro plugin install builder-node
 RUN npm -g config set prefix /root/.node
 
 RUN yarn config set cache-folder /root/.node
+
+ENV CI=true
 
 RUN zmicro plugin install ta
 
