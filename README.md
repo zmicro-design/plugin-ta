@@ -18,7 +18,7 @@ wget -qO- https://raw.githubusercontent.com/zmicro-design/plugin-ta/master/insta
 ## Usage
 
 ```markdown
-Ta (v0.0.3)
+Ta (v0.0.10)
 
 Ta Development CLI 
 
@@ -28,6 +28,8 @@ Usage:
   ta build               - Project build
   ta fmt                 - Project format
   ta commit              - Project commit
+  ta version             - Show version
+  ta update              - Show update
   ta help                - Show help
 ```
 
