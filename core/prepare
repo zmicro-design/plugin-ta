@@ -5,10 +5,23 @@ ta::helloworld() {
 }
 
 ta::prepare() {
+  which nvm >>/dev/null 2>&1
+  if [ "$?" != "0" ]; then
+    log::info "[$(timestamp)] prepare nvm (1) ..."
+    zmicro plugin install nvm
+  else
+    local nvm_bin=$(which nvm)
+    local standard_nvm_bin=$ZMICRO_HOME/bin/nvm
+    if [ "$nvm_bin" != "$standard_nvm_bin" ]; then
+      log::info "[$(timestamp)] prepare nvm (2) ..."
+      zmicro plugin install nvm
+    fi
+  fi
+
   which node >>/dev/null
   if [ $? -ne 0 ]; then
     log::info "[$(timestamp)] node.js is not installed, try to install it ..."
-    zmicro package install nodejs
+    nvm use $PLUGIN_TA_NODE_VERSION
 
     export NODE_HOME=/usr/local/node
     export NODE_USER_HOME=$HOME/.node
@@ -18,17 +31,11 @@ ta::prepare() {
   local current_node_version=$(node -v)
   if [ "$current_node_version" != "$PLUGIN_TA_NODE_VERSION" ] && [ "$(version::compare_gt ${current_node_version} $PLUGIN_TA_NODE_VERSION)" = "false" ]; then
     if [ "$CI" != "true" ]; then
-      log::info "Your node vrsion is $(color::red ${current_node_version}), but ta system require version at least $(color::green ${PLUGIN_TA_NODE_VERSION})"
-      os::inquirer value "yesno" "Are you sure to install node($(color::green ${PLUGIN_TA_NODE_VERSION})) right now ?" true false
+      log::info "当前 Node.js 版本是 $(color::red ${current_node_version}), 但是 Ta 系统要求至少 $(color::green ${PLUGIN_TA_NODE_VERSION})"
+      os::inquirer value "yesno" "是否确认升级 Node.js 版本 ($(color::green ${PLUGIN_TA_NODE_VERSION}))？" true false
       if [ "$value" != "true" ]; then
         exit 0
       fi
-    fi
-
-    which nvm >>/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-      log::info "nvm is not installed, try to install it ..."
-      zmicro plugin install nvm
     fi
 
     nvm use $PLUGIN_TA_NODE_VERSION
