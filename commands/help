@@ -14,7 +14,8 @@ description() {
 
 usage() {
   echo "Usage:"
-  echo "  ta bootstrap           - Setup environment quickly"
+  echo "  ta setup               - Setup Ta Development Environment"
+  echo "  ta bootstrap           - Bootstrap project"
   echo "  ta dev                 - Project dev"
   echo "  ta build               - Project build"
   echo "  ta fmt                 - Project format"
