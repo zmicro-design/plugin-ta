@@ -45,13 +45,13 @@ ta::prepare() {
   fi
 
   which rimraf >>/dev/null
-  if [ $? -ne 0 ]; then
+  if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] rimraf is not installed, try to install it ..."
     npm i -g rimraf
   fi
 
   which gpm >>/dev/null
-  if [ $? -ne 0 ]; then
+  if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] gpm is not installed, try to install it ..."
     npm i -g gpm
   fi
