@@ -1,0 +1,18 @@
+#!/bin/bash
+
+help() {
+  echo "Nrm - change npm registry"
+  echo ""
+  echo "Usage:"
+  echo "  ta nrm"
+}
+
+core() {
+  nrm "$@"
+}
+
+run() {
+  core $@
+}
+
+run $@
