@@ -1,0 +1,18 @@
+#!/bin/bash
+
+ta::info() {
+  ta::prepare
+
+  log::info "node: $(node -v)"
+  log::info "nvm: $(nvm -v)"
+  log::info "ta: $(ta version)"
+  log::info "os:"
+  log::info "  release: $(os::release)"
+  log::info "  arch: $(os::arch)"
+  log::info "  kernel: $(os::kernel)"
+  log::info "  platform: $(os::platform)"
+  log::info "  device: $(os::device_config)"
+
+}
+
+export -f ta::info
