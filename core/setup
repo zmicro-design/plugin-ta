@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ta::setup() {
+  log::info "[$(timestamp)] 配置 TA 开发环境 ..."
+
+  ta::prepare
+
+  log::info "[$(timestamp)] 配置 TA 开发环境完成"
+}
+
+export -f ta::setup
