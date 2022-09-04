@@ -3,3 +3,6 @@ logs/
 log/
 *_tmp
 *.swp
+
+commands/_internal
+plugins/
