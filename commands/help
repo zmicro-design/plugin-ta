@@ -23,6 +23,7 @@ usage() {
   echo "  ta commit              - Project commit"
   echo "  ta version             - Show version"
   echo "  ta update              - Show update"
+  echo "  ta info                - Show system info"
   echo "  ta help                - Show help"
 }
 
