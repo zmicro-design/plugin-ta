@@ -7,6 +7,7 @@ ta::info() {
   log::info "gpm: $(color::green v$(gpm --version))"
   log::info "nvm: $(nvm -v)"
   log::info "ta: $(ta version)"
+  log::info "zmicro: $(zmicro version)"
   log::info "os:"
   log::info "  release: $(os::release)"
   log::info "  arch: $(os::arch)"
