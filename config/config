@@ -3,3 +3,5 @@
 export PLUGIN_TA_NAME=ta
 
 export PLUGIN_TA_NODE_VERSION=v16.17.0
+
+export PLUGIN_TA_GPM_VERSION=v1.4.1
