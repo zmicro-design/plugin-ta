@@ -3,6 +3,12 @@
 ta::add() {
   ta::prepare
 
+  local repository=$1
+  if [ -z "$repository" ]; then
+    log::error "Git repository is required"
+    return 1
+  fi
+
   gpm add "$@"
 }
 
