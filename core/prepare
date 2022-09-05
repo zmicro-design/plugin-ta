@@ -5,6 +5,13 @@ ta::helloworld() {
 }
 
 ta::prepare() {
+  # zmicro check version
+  local zmicro_version="$(version::zmicro)"
+  if [ "$(semver::compare_gte ${zmicro_version} $PLUGIN_TA_ZMICRO_VERSION)" != "true" ]; then
+    log::info "[$(timestamp)] zmicro version found update, try to update it ..."
+    zmicro update
+  fi
+
   which nvm >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] prepare nvm (1) ..."
