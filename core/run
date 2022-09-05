@@ -1,0 +1,9 @@
+#!/bin/bash
+
+ta::run() {
+  ta::prepare
+
+  npm run "$@"
+}
+
+export -f ta::run

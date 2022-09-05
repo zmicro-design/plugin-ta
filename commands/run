@@ -1,0 +1,23 @@
+#!/bin/bash
+
+help() {
+  echo "Run - run npm script"
+  echo ""
+  echo "Usage:"
+  echo "  ta run <script>"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::run "$@"
+}
+
+run() {
+  core $@
+}
+
+run $@

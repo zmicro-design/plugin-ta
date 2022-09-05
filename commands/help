@@ -21,6 +21,7 @@ usage() {
   echo "  ta build               - Project build"
   echo "  ta fmt                 - Project format"
   echo "  ta commit              - Project commit"
+  echo "  ta run                 - Run npm script"
   echo "  ta version             - Show version"
   echo "  ta update              - Show update"
   echo "  ta info                - Show system info"
