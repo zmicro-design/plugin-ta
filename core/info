@@ -3,7 +3,8 @@
 ta::info() {
   ta::prepare
 
-  log::info "node: $(node -v)"
+  log::info "node: $(color::green $(node -v))"
+  log::info "gpm: $(color::green v$(gpm --version))"
   log::info "nvm: $(nvm -v)"
   log::info "ta: $(ta version)"
   log::info "os:"
