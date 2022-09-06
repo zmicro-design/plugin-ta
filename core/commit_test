@@ -1,0 +1,13 @@
+#!/bin/bash
+
+function test_ta::should_merge_remote() {
+  export PLUGIN_TA_REPOS="custom_repo_name1,custom_repo_name2,custom_repo_name3"
+
+  local branch="custom_repo_name2"
+
+  testing::expect \
+    "${FUNCNAME[0]}" \
+    "to_equal" \
+    "true" \
+    "$(ta::should_merge_remote $branch)"
+}

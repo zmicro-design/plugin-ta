@@ -5,31 +5,40 @@ ta:commit() {
 
   gpm commit
 
-  ta::post_commit_merge
+  local branch=$(git::basename)
+  if [ "$(ta::should_merge_remote $branch)" = "true" ]; then
+    ta::merge_remote
+  fi
 }
 
-# ta::post_commit_merge 检查是否在配置的指定文件夹下，如果是则执行 mergeSprintDev
-ta::post_commit_merge() {
-  local folder_path="${PWD}/${0}" # 文件夹路径
-  local old_ifs="$IFS"
-  local ifs=","
-  local folders=($PLUGIN_TA_FOLDERS)
-  local ifs="$old_ifs"
-  for folderName in ${folders[@]}; do
-    local result=$(echo $folder_path | grep "${folderName}")
-    if [ "$result" != "" ]; then
-      ta::merge_remote
+# ta::should_merge_remote 检查是否在配置的指定文件夹下，如果是则执行 mergeSprintDev
+ta::should_merge_remote() {
+  local res="false"
+
+  local repo_name=$1
+  if [ -z "$repo_name" ]; then
+    log::error "[$(timestamp)][ta::should_merge_remote] repo_name is required"
+    return 1
+  fi
+
+  local allowed_repos=$(string::split "," $PLUGIN_TA_REPOS)
+
+  for allowed_repo in ${allowed_repos[@]}; do
+    if [ "$allowed_repo" = "$repo_name" ]; then
+      res="true"
+      break
     fi
   done
+
+  echo $res
 }
 
 # ta::merge_remote 如果是 feature，说明在开发功能，提交时可以自动 merge 远端 sprint_dev
 ta::merge_remote() {
-  local obr=$(git branch | grep "*")
-  local br=${obr:2}
-  local head=${br:0:7}
+  local branch=$(git::branch)
+  local type=$(echo $branch | awk -F '/' '{print $1}')
 
-  if [ "$head" = "feature" ]; then
+  if [ "$type" = "feature" ]; then
     log::info "[$(timestamp)] 符合分支名开头为 feature 的条件，同步 sprint_dev！"
     git fetch origin
     git merge origin/sprint_dev
@@ -44,5 +53,5 @@ ta::merge_remote() {
 
 export -f ta:commit
 
-export -f ta::post_commit_merge
+export -f ta::should_merge_remote
 export -f ta::merge_remote
