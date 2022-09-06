@@ -15,11 +15,11 @@ ta::branch() {
   fi
 
   if [ -z "$branch_version" ]; then
-    os::inquirer branch_version "text" "请输入 TA 版本" true
+    os::inquirer branch_version "text" "请输入 TA 版本（例如：4.0）" true
   fi
 
   if [ -z "$branch_function" ]; then
-    os::inquirer branch_function "text" "请输入 TA 功能" true
+    os::inquirer branch_function "text" "请输入 TA 功能（例如：add_user_config）" true
   fi
 
   local branch_name="${branch_type}/${branch_version}_${branch_function}"

@@ -13,7 +13,7 @@ core() {
     exit 0
   fi
 
-  ta::branch feat "$@"
+  ta::branch feature "$@"
 }
 
 run() {
