@@ -3,6 +3,7 @@ logs/
 log/
 *_tmp
 *.swp
+.history
 
 commands/_internal
 plugins/
