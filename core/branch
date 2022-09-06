@@ -1,0 +1,45 @@
+#!/bin/bash
+
+ta::branch() {
+  local branch_type="$1"
+  local branch_version="$2"
+  local branch_function="$3"
+
+  local upstream_branch="origin/sprint_dev"
+
+  ta::prepare
+
+  if [ -z "$branch_type" ]; then
+    local branch_types=(feature fix hotfix release)
+    os::inquirer branch_type "select" branch_types "请选择分支类型"
+  fi
+
+  if [ -z "$branch_version" ]; then
+    os::inquirer branch_version "text" "请输入 TA 版本" true
+  fi
+
+  if [ -z "$branch_function" ]; then
+    os::inquirer branch_function "text" "请输入 TA 功能" true
+  fi
+
+  local branch_name="${branch_type}/${branch_version}_${branch_function}"
+
+  if [ "$branch_type" = "hotfix" ]; then
+    os::inquirer upstream_branch "text" "请输入 HotFix 上游分支" true
+  # elif [ "$branch_type" = "release" ]; then
+  #   os::inquirer upstream_branch "text" "请输入 Release 上游分支" true
+  fi
+
+  log::info "[$(timestamp)] 创建分支：$branch_name ..."
+
+  git fetch origin >>/dev/null
+  git checkout -b $branch_name $upstream_branch >>/dev/null
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] 创建分支失败！"
+    return 1
+  fi
+
+  log::success "[$(timestamp)] 创建分支成功！"
+}
+
+export -f ta::branch

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+help() {
+  echo "Create a new bugfix branch"
+  echo ""
+  echo "Usage:"
+  echo "  ta branch fix [version] [function]"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::branch fix "$@"
+}
+
+run() {
+  core $@
+}
+
+run $@
