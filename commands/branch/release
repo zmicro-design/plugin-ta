@@ -1,0 +1,23 @@
+#!/bin/bash
+
+help() {
+  echo "Create a new release branch"
+  echo ""
+  echo "Usage:"
+  echo "  ta branch release [version] [function]"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::branch release "$@"
+}
+
+run() {
+  core $@
+}
+
+run $@
