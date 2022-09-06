@@ -8,4 +8,4 @@ export PLUGIN_TA_NODE_VERSION=v16.17.0
 
 export PLUGIN_TA_GPM_VERSION=v1.4.1
 
-export PLUGIN_TA_FOLDERS=ta-multiverse
+export PLUGIN_TA_REPOS=ta-multiverse
