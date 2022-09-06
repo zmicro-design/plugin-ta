@@ -5,8 +5,9 @@ ta:commit() {
 
   gpm commit
 
-  local branch=$(git::basename)
-  if [ "$(ta::should_merge_remote $branch)" = "true" ]; then
+  local repo_name=$(git::basename)
+  local branch=$(git::branch)
+  if [ "$(ta::should_merge_remote $repo_name $branch)" = "true" ]; then
     ta::merge_remote
   fi
 }
@@ -16,6 +17,8 @@ ta::should_merge_remote() {
   local res="false"
 
   local repo_name=$1
+  local branch=$2
+
   if [ -z "$repo_name" ]; then
     log::error "[$(timestamp)][ta::should_merge_remote] repo_name is required"
     return 1
@@ -30,25 +33,25 @@ ta::should_merge_remote() {
     fi
   done
 
+  local type=$(echo $branch | awk -F '/' '{print $1}')
+  if [ "$type" != "feature" ]; then
+    res="false"
+  fi
+
   echo $res
 }
 
 # ta::merge_remote 如果是 feature，说明在开发功能，提交时可以自动 merge 远端 sprint_dev
 ta::merge_remote() {
-  local branch=$(git::branch)
-  local type=$(echo $branch | awk -F '/' '{print $1}')
-
-  if [ "$type" = "feature" ]; then
-    log::info "[$(timestamp)] 符合分支名开头为 feature 的条件，同步 sprint_dev！"
-    git fetch origin
-    git merge origin/sprint_dev
-    if [ "$?" != "0" ]; then
-      log::error "[$(timestamp)] 同步 sprint_dev 失败，请手动解决冲突后再提交！"
-      return 1
-    fi
-
-    log::success "[$(timestamp)] 同步 sprint_dev 成功！"
+  log::info "[$(timestamp)] 符合分支名开头为 feature 的条件，同步 sprint_dev！"
+  git fetch origin
+  git merge origin/sprint_dev
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] 同步 sprint_dev 失败，请手动解决冲突后再提交！"
+    return 1
   fi
+
+  log::success "[$(timestamp)] 同步 sprint_dev 成功！"
 }
 
 export -f ta:commit

@@ -3,11 +3,19 @@
 function test_ta::should_merge_remote() {
   export PLUGIN_TA_REPOS="custom_repo_name1,custom_repo_name2,custom_repo_name3"
 
-  local branch="custom_repo_name2"
+  local repo_name="custom_repo_name2"
+  local branch_name="feature/feature_name"
 
   testing::expect \
     "${FUNCNAME[0]}" \
     "to_equal" \
     "true" \
-    "$(ta::should_merge_remote $branch)"
+    "$(ta::should_merge_remote $repo_name $branch_name)"
+
+  branch_name="hotfix/feature_name"
+  testing::expect \
+    "${FUNCNAME[0]}" \
+    "to_equal" \
+    "false" \
+    "$(ta::should_merge_remote $repo_name $branch_name)"
 }
