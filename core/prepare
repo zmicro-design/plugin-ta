@@ -5,7 +5,7 @@ ta::helloworld() {
 }
 
 ta::prepare() {
-  ta::auto_update >/dev/null 2>&1 &
+  # ta::auto_update >/dev/null 2>&1 &
 
   # zmicro check version
   local zmicro_version="$(version::zmicro)"
