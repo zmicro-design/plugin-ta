@@ -1,0 +1,23 @@
+#!/bin/bash
+
+help() {
+  echo "Config - get/set ta config"
+  echo ""
+  echo "Usage:"
+  echo "  ta config [key] [value] [-g]"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::config "$@"
+}
+
+run() {
+  core $@
+}
+
+run $@

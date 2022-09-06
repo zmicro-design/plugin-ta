@@ -1,0 +1,52 @@
+#!/bin/bash
+
+ta::config() {
+  ta::prepare
+
+  local key=$1
+  local value=$2
+  local opt=$3
+
+  if [ ! -f "$PLUGIN_TA_GLOBAL_RC" ]; then
+    echo "" >>$PLUGIN_TA_GLOBAL_RC
+  fi
+
+  if [ ! -f "$PLUGIN_TA_LOCAL_RC" ]; then
+    echo "" >>$PLUGIN_TA_LOCAL_RC
+  fi
+
+  if [ "$key" = "" ]; then
+    local configs="=== Global Config ===\n$(fs::read $PLUGIN_TA_GLOBAL_RC)\n\n=== Local Config ===\n$(fs::read $PLUGIN_TA_LOCAL_RC)"
+    echo -e "$configs"
+    return 0
+  fi
+
+  if [ "$value" = "" ]; then
+    value=$(config::get $key $PLUGIN_TA_LOCAL_RC)
+
+    if [ "$value" = "" ]; then
+      value=$(config::get $key $PLUGIN_TA_GLOBAL_RC)
+    fi
+
+    if [ "$value" = "" ]; then
+      log::error "$key not found"
+      return 1
+    fi
+
+    log::info "$key: $(color::green $value)"
+    return 0
+  fi
+
+  if [ "$opt" = "-g" ]; then
+    config::set $key $value $PLUGIN_TA_GLOBAL_RC
+    log::info "Set Global Config"
+    log::info "$key: $(color::green $value)"
+    return 0
+  fi
+
+  config::set $key $value $PLUGIN_TA_LOCAL_RC
+  log::info "Set Local Config"
+  log::info "$key: $(color::green $value)"
+}
+
+export -f ta::config
