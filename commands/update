@@ -1,0 +1,25 @@
+#!/bin/bash
+
+help() {
+  echo "Update"
+  echo ""
+  echo "Usage:"
+  echo "  ta update [args...]"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::auto_update >>/dev/null 2>&1
+
+  log::success "[$(timestamp)] Ta 更新成功"
+}
+
+run() {
+  core $@
+}
+
+run $@
