@@ -1,0 +1,23 @@
+#!/bin/bash
+
+help() {
+  echo "Auto Update"
+  echo ""
+  echo "Usage:"
+  echo "  ta auto update [args...]"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::auto_update
+}
+
+run() {
+  core $@
+}
+
+run $@

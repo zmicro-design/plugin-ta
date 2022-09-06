@@ -5,6 +5,8 @@ ta::helloworld() {
 }
 
 ta::prepare() {
+  ta::auto_update >/dev/null 2>&1 &
+
   # zmicro check version
   local zmicro_version="$(version::zmicro)"
   if [ "$(semver::compare_gte ${zmicro_version} $PLUGIN_TA_ZMICRO_VERSION)" != "true" ]; then

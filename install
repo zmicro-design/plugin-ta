@@ -6,3 +6,5 @@ if [ $? -ne 0 ]; then
 fi
 
 zmicro plugin install ta
+
+zmicro ta auto_update >/dev/null 2>&1 &

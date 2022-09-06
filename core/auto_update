@@ -1,0 +1,28 @@
+#!/bin/bash
+
+ta::auto_update() {
+  local name=zmicro_ta_cli_auto_update
+
+  if [ "$(zmicro cron has $name)" = "true" ]; then
+    zmicro cron status "$name" "0 9 _/1 _ _ " >>/dev/null 2>&1
+    if [ "$?" != "0" ]; then
+      zmicro cron enable $name
+
+      log::success "ta auto update enabled"
+      exit 0
+    fi
+
+    log::success "ta auto update is running"
+    return
+  fi
+
+  zmicro cron create $name 0 9 _/1 _ _ ta update >>/dev/null
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] ta create auto update error"
+    exit 1
+  else
+    log::success "ta will auto update ok at 09:00 AM every day"
+  fi
+}
+
+export -f ta::auto_update
