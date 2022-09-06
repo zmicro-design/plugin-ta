@@ -1,9 +1,39 @@
 #!/bin/bash
 
 ta:commit() {
+  # 如果是 feature，说明在开发功能，提交时可以自动 merge 远端 sprint_dev
+  function mergeSprintDev(){
+    obr=`git branch | grep "*"`
+    br=${obr:2}
+    head=${br:0:7}
+
+    if [ "$head" = "feature" ]; then
+      echo '符合分支名开头为 feature 的条件，同步 sprint_dev！'
+      git fetch origin
+      git merge origin/sprint_dev
+    fi 
+  }
+
+  # 检查是否在配置的指定文件夹下，如果是则执行 mergeSprintDev
+  function checkMerge(){
+    path="${PWD}/${0}" # 文件夹路径
+    OLD_IFS="$IFS"
+    IFS=","
+    folders=($PLUGIN_TA_FOLDERS)
+    IFS="$OLD_IFS" 
+    for folderName in ${folders[@]}; do
+      result=$(echo $path | grep "${folderName}")
+      if [ "$result" != "" ]; then
+        mergeSprintDev
+      fi
+    done  
+  }
+
   ta::prepare
 
   gpm commit
+  
+  checkMerge
 }
 
 export -f ta:commit
