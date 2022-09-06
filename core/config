@@ -3,49 +3,50 @@
 ta::config() {
   ta::prepare
 
-  local GLOBAL_RC=$HOME/.tarc
-  local LOCAL_RC=$PWD/.tarc
+  local key=$1
+  local value=$2
+  local opt=$3
 
-  if [ ! -f "$GLOBAL_RC" ]; then
-    echo "" >> $GLOBAL_RC
+  if [ ! -f "$PLUGIN_TA_GLOBAL_RC" ]; then
+    echo "" >>$PLUGIN_TA_GLOBAL_RC
   fi
 
-  if [ ! -f "$LOCAL_RC" ]; then
-    echo "" >> $LOCAL_RC
+  if [ ! -f "$PLUGIN_TA_LOCAL_RC" ]; then
+    echo "" >>$PLUGIN_TA_LOCAL_RC
   fi
 
-  if [ "$1" = "" ]; then
-    local configs="=== Global Config ===\n$(fs::read $GLOBAL_RC)\n\n=== Local Config ===\n$(fs::read $LOCAL_RC)"
+  if [ "$key" = "" ]; then
+    local configs="=== Global Config ===\n$(fs::read $PLUGIN_TA_GLOBAL_RC)\n\n=== Local Config ===\n$(fs::read $PLUGIN_TA_LOCAL_RC)"
     echo -e "$configs"
-    exit 0
+    return 0
   fi
 
-  if [ "$2" = "" ]; then
-    local value=$(config::get $1 $LOCAL_RC)
+  if [ "$value" = "" ]; then
+    value=$(config::get $key $PLUGIN_TA_LOCAL_RC)
 
     if [ "$value" = "" ]; then
-      value=$(config::get $1 $GLOBAL_RC)
+      value=$(config::get $key $PLUGIN_TA_GLOBAL_RC)
     fi
 
     if [ "$value" = "" ]; then
-      log::info "$1 not found"
-      exit 0
+      log::error "$key not found"
+      return 1
     fi
 
-    log::info "$1: $(color::green $value)"
-    exit 0
+    log::info "$key: $(color::green $value)"
+    return 0
   fi
 
-  if [ "$3" = "-g" ]; then
-    config::set $1 $2 $GLOBAL_RC
+  if [ "$opt" = "-g" ]; then
+    config::set $key $value $PLUGIN_TA_GLOBAL_RC
     log::info "Set Global Config"
-    log::info "$1: $(color::green $2)"
-    exit 0
+    log::info "$key: $(color::green $value)"
+    return 0
   fi
 
-  config::set $1 $2 $LOCAL_RC
+  config::set $key $value $PLUGIN_TA_LOCAL_RC
   log::info "Set Local Config"
-  log::info "$1: $(color::green $2)"
+  log::info "$key: $(color::green $value)"
 }
 
 export -f ta::config
