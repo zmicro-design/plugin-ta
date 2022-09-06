@@ -3,12 +3,44 @@
 ta:commit() {
   ta::prepare
 
+  local no_push=false
+  local no_merge=false
+
+  while [[ $# -gt 0 ]]; do
+    local key=$1
+    local value=$2
+    case $key in
+    --no-push)
+      no_push=true
+      shift
+      ;;
+    --no-merge)
+      no_merge=true
+      shift
+      ;;
+    *)
+      if [ "$(string::match $key ^-)" = "true" ]; then
+        log::error "ERROR: unknown parameter \"$key\""
+        help
+        exit 1
+      fi
+
+      shift
+      ;;
+    esac
+  done
+
+  # sleep 3
   gpm commit
 
   local repo_name=$(git::basename)
   local branch=$(git::branch)
   if [ "$(ta::should_merge_remote $repo_name $branch)" = "true" ]; then
     ta::merge_remote
+  fi
+
+  if [ "$no_push" != "true" ]; then
+    ta::commit_push
   fi
 }
 
@@ -54,7 +86,25 @@ ta::merge_remote() {
   log::success "[$(timestamp)] 同步 sprint_dev 成功！"
 }
 
+# ta::commit_push 推送代码到远程
+ta::commit_push() {
+  local repo_name=$(git::basename)
+  local branch=$(git::branch)
+
+  log::info "[$(timestamp)] 开始推送代码到远程 ..."
+
+  git push origin $branch >>/dev/null
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] 推送代码到远端失败！"
+    return 1
+  fi
+
+  log::success "[$(timestamp)] 推送代码到远端成功！"
+}
+
 export -f ta:commit
 
 export -f ta::should_merge_remote
 export -f ta::merge_remote
+
+export -f ta::commit_push

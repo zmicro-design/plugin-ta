@@ -4,7 +4,10 @@ help() {
   echo "Commit - ta commit"
   echo ""
   echo "Usage:"
-  echo "  ta commit"
+  echo "  ta commit [options...]"
+  echo ""
+  echo "Options:"
+  echo "    --no-push   Don't push the commit to remote"
 }
 
 core() {
@@ -13,11 +16,11 @@ core() {
     exit 0
   fi
 
-  ta:commit
+  ta:commit "$@"
 }
 
 run() {
-  core $@
+  core "$@"
 }
 
-run $@
+run "$@"
