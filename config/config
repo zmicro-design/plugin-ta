@@ -12,3 +12,5 @@ export PLUGIN_TA_REPOS=ta-multiverse
 
 export PLUGIN_TA_GLOBAL_RC=$HOME/.tarc
 export PLUGIN_TA_LOCAL_RC=$PWD/.tarc
+
+export PLUGIN_TA_NPM_REGISTRY=taobao
