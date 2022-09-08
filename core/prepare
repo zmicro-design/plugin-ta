@@ -76,6 +76,9 @@ ta::prepare() {
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] nrm is not installed, try to install it ..."
     npm i -g @cliz/nrm # --force
+    nrm use $PLUGIN_TA_NPM_REGISTRY
+  else
+    nrm use $PLUGIN_TA_NPM_REGISTRY
   fi
 }
 
