@@ -4,6 +4,16 @@ ta::info() {
   ta::prepare
 
   log::info "node: $(color::green $(node -v))"
+  log::info "npm: $(color::green v$(npm -v))"
+
+  if [ "$(os::has_command yarn)" = "true" ]; then
+    log::info "yarn: $(color::green v$(yarn -v))"
+  fi
+
+  if [ "$(os::has_command pnpm)" = "true" ]; then
+    log::info "pnpm: $(color::green v$(pnpm -v))"
+  fi
+
   log::info "gpm: $(color::green v$(gpm --version))"
   log::info "nvm: $(nvm -v)"
   log::info "ta: $(ta version)"
