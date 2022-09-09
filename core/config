@@ -38,6 +38,23 @@ ta::config() {
   fi
 
   if [ "$opt" = "-g" ]; then
+    # @TODO gpm
+    if [ "$key" = "project.workdir" ]; then
+      if [ -z "$value" ]; then
+        log::error "workdir is required, but empty"
+        return 1
+      fi
+
+      local gpm_version="v$(gpm --version)"
+      if [ "$(semver::compare_gte ${gpm_version} v1.4.3)" != "true" ]; then
+        log::info "[$(timestamp)] config project.workdir need gpm(v1.4.3) or higher version"
+        npm i -g @cliz/gpm # @$PLUGIN_TA_GPM_VERSION --force
+      fi
+
+      gpm config set project.workdir $value
+      return 0
+    fi
+
     config::set $key $value $PLUGIN_TA_GLOBAL_RC
     log::info "Set Global Config"
     log::info "$key: $(color::green $value)"
