@@ -30,6 +30,7 @@ ta::prepare() {
   which node >>/dev/null
   if [ $? -ne 0 ]; then
     log::info "[$(timestamp)] node.js is not installed, try to install it ..."
+
     nvm use $PLUGIN_TA_NODE_VERSION
 
     export NODE_HOME=/usr/local/node
@@ -76,9 +77,11 @@ ta::prepare() {
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] nrm is not installed, try to install it ..."
     npm i -g @cliz/nrm # --force
-    nrm use $PLUGIN_TA_NPM_REGISTRY
-  else
-    nrm use $PLUGIN_TA_NPM_REGISTRY
+  fi
+
+  # @TODO should compare with $PLUGIN_TA_NPM_REGISTRY
+  if [ "$(npm config get registry)" != "https://registry.npmmirror.com/" ]; then
+    nrm use $PLUGIN_TA_NPM_REGISTRY >>/dev/null
   fi
 }
 
