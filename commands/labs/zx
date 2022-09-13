@@ -1,3 +1,25 @@
 #!/usr/bin/env zx
 
-console.log('hi ta with zx');
+import { hi } from '../../core/others/zx/hi.mjs';
+
+function help() {
+  console.log('Zx - run with zx');
+  console.log('');
+  console.log('Usage:');
+  console.log(' ta labs zx [args...]');
+}
+
+function core(first, ...rest) {
+  if (first === '-h' || first === '--help') {
+    help();
+    return;
+  }
+
+  console.log(hi(first, ...rest));
+}
+
+function run() {
+  core(...process.argv.slice(3));
+}
+
+run();
