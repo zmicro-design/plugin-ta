@@ -18,19 +18,44 @@ wget -qO- https://raw.githubusercontent.com/zmicro-design/plugin-ta/master/insta
 ## Usage
 
 ```markdown
-Ta (v0.0.10)
+Ta (v1.2.8)
 
-Ta Development CLI 
+Ta Development CLI
 
-Usage:
-  ta bootstrap           - Setup environment quickly
-  ta dev                 - Project dev
-  ta build               - Project build
-  ta fmt                 - Project format
-  ta commit              - Project commit
-  ta version             - Show version
-  ta update              - Show update
-  ta help                - Show help
+Usage: ta <command> [args...]
+
+Commands:
+  环境相关
+  setup               - Setup Ta Development Environment
+
+  项目管理
+  add <repository>    - Add Git Repository
+
+  日常开发
+  bootstrap           - Bootstrap project
+  dev                 - Project dev
+  commit              - Project commit
+  fmt                 - Project format
+
+  分支管理
+  feat                - Create feature branch
+  branch <type>       - Create branch by feat/fix/hotfix/release
+  mr                  - Create merge request (:WIP:)
+
+  构建部署
+  build               - Project build
+
+  其他扩展
+  run                 - Run npm script
+
+  配置管理
+  config              - Get/set config
+
+  系统相关
+  info                - Show system info
+  update              - Update CLI
+  version             - Show version
+  help                - Show help
 ```
 
 ## License
