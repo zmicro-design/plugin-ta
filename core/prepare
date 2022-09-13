@@ -39,8 +39,8 @@ ta::prepare() {
   fi
 
   local current_node_version=$(node -v)
-  if [ "$current_node_version" != "$PLUGIN_TA_NODE_VERSION" ] && [ "$(version::compare_gt ${current_node_version} $PLUGIN_TA_NODE_VERSION)" = "false" ]; then
-    log::info "当前 Node.js 版本是 $(color::red ${current_node_version}), 但是 Ta 系统要求至少 $(color::green ${PLUGIN_TA_NODE_VERSION})"
+  if [ "$current_node_version" != "$PLUGIN_TA_NODE_VERSION" ]; then
+    log::info "当前 Node.js 版本是 $(color::red ${current_node_version}), 但是 Ta 系统要求 $(color::green ${PLUGIN_TA_NODE_VERSION})"
 
     if [ "$CI" != "true" ]; then
       os::inquirer value "yesno" "是否确认升级 Node.js 版本 ($(color::green ${PLUGIN_TA_NODE_VERSION}))？" true false
