@@ -29,11 +29,11 @@ ta::config() {
     fi
 
     if [ "$value" = "" ]; then
-      log::error "$key not found"
+      echo ""
       return 1
     fi
 
-    log::info "$key: $(color::green $value)"
+    echo "$value"
     return 0
   fi
 

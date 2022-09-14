@@ -3,9 +3,15 @@
 ta::dev() {
   ta::prepare
 
-  npm run start --if-present
+  local key="DEV_SCRIPT"
+  local cmd=$(ta::config ${key})
 
-  npm run dev --if-present
+  if [ "$cmd" = "" ]; then
+    npm run dev --if-present
+    npm run start --if-present
+  else
+    npm run "$cmd"
+  fi
 }
 
 export -f ta::dev
