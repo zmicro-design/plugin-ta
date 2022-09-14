@@ -3,7 +3,7 @@
 ta::dev() {
   ta::prepare
 
-  local key="dev.script"
+  local key="DEV_SCRIPT"
   local cmd=$(ta::config ${key})
 
   if [ "$cmd" = "" ]; then
