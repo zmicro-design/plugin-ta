@@ -54,6 +54,22 @@ ta::prepare() {
     nvm use $PLUGIN_TA_NODE_VERSION
   fi
 
+  local current_npm_version=$(npm -v)
+  if [ "$current_npm_version" != "$PLUGIN_TA_NPM_VERSION" ] && [ "$(version::compare_gt ${current_npm_version} $PLUGIN_TA_NPM_VERSION)" = "false" ]; then
+    log::info "当前 npm 版本是 $(color::red ${current_npm_version}), 但是 Ta 系统要求至少 $(color::green ${PLUGIN_TA_NPM_VERSION})"
+
+    if [ "$CI" != "true" ]; then
+      os::inquirer value "yesno" "是否确认升级 npm 版本 ($(color::green ${PLUGIN_TA_NPM_VERSION}))？" true false
+      if [ "$value" != "true" ]; then
+        exit 0
+      fi
+    else
+      log::info "CI 环境默认安装 $(color::green ${PLUGIN_TA_NPM_VERSION})"
+    fi
+
+    npm i -g npm@$PLUGIN_TA_NPM_VERSION
+  fi
+
   which rimraf >>/dev/null
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] rimraf is not installed, try to install it ..."
