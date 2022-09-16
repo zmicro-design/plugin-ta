@@ -1,0 +1,25 @@
+#!/bin/bash
+
+help() {
+  echo "Create a mr"
+  echo ""
+  echo "Usage:"
+  echo "  ta mr"
+  # echo " source_branch default current branch"
+  # echo " target_branch default based on current_branch_name"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::mr "$@"
+}
+
+run() {
+  core $@
+}
+
+run $@
