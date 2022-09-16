@@ -1,0 +1,75 @@
+#!/bin/bash
+
+ta::mr() {
+  local current_branch_name=$(git::branch)
+
+  local is_feature="true"
+
+  local type=$(echo $current_branch_name | awk -F '/' '{print $1}')
+  if [ "$type" != "feature" ]; then
+    is_feature="false"
+    log::info "❤️暂不支持非feature分支❤️"
+    return 1
+  fi
+
+  local key="GITLAB_TOKEN"
+  local gitlab_token=$(ta::config ${key})
+  
+  if [ "$gitlab_token" = "" ]; then
+    log::info "没有发现gitlab token，请打开下面链接获取token"
+    log::info "http://10.27.249.150:8888/profile/personal_access_tokens"
+    os::inquirer gitlab_token "text" "请输入gitlab token" true
+    ta::config $key "$gitlab_token" -g
+  fi
+
+  local tmp_data_file=$(os::tmp_file)
+  cat <<-END > $tmp_data_file
+{
+  "target_branch": "sprint_dev",
+  "source_branch": "${current_branch_name}",
+  "title": "${current_branch_name}",
+  "assignee_id": "13",
+  "remove_source_branch": true,
+  "squash": true
+}
+END
+
+  local mr_result=$(curl --request POST -H "PRIVATE-TOKEN: ${gitlab_token}" -H "Content-Type: application/json" -d @${tmp_data_file} "http://10.27.249.150:8888/api/v4/projects/thinking-frontend%2Fta-multiverse/merge_requests" 2>/dev/null)
+
+  local msg=$(echo $mr_result | awk -F 'message":' '{print $2}')
+  if [ "$msg" != "" ]; then
+    local msg2=$(echo $msg |awk -F '401' '{print $2}')
+    if [ "$msg2" = "" ]; then
+      local msg3=$(echo $msg |awk -F '}' '{print $1}')
+      log::info "MR提交失败:"
+      log::info "$msg3"
+      return 1
+    else
+      log::info "gitlab token 无效或已过期，请在下行链接获取token"
+      log::info "http://10.27.249.150:8888/profile/personal_access_tokens"
+      log::info "请使用 ta config GITLAB_TOKEN <token> -g 设置token"
+      return 1
+    fi
+  fi
+
+  local err_cannot_be_merged=$(echo $mr_result | awk -F '"merge_status":"cannot_be_merged"' '{print $2}')
+  local err_conflict=$(echo $mr_result | awk -F '"has_conflicts":true' '{print $2}')
+
+  if [ "$err_conflict" != "" ] || [ "$err_cannot_be_merged" != "" ]; then
+    log::info "MR已提交，但是有冲突或分支出错"
+    return 1
+  fi
+
+  local msg_can_be_merged=$(echo $mr_result | awk -F '"merge_status":"can_be_merged"' '{print $2}')
+  if [ "$msg_can_be_merged" != "" ]; then
+    log::info "提交MR成功！"
+    log::info "已分配给❤️朱建山❤️进行review"
+    return
+  fi
+
+  log::info "提交MR成功"
+
+  log::info "日志：$mr_result"
+}
+
+export -f ta::mr
