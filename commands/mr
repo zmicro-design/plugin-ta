@@ -19,7 +19,7 @@ core() {
 }
 
 run() {
-  core $@
+  core "$@"
 }
 
 run $@
