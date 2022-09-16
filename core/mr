@@ -68,7 +68,7 @@ END
   fi
   log::info "提交MR成功"
 
-  log::info "$mr_result"
+  log::info "日志：$mr_result"
 }
 
 export -f ta::mr
