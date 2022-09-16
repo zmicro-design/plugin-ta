@@ -66,6 +66,7 @@ END
     log::info "已分配给❤️朱建山❤️进行review"
     return
   fi
+
   log::info "提交MR成功"
 
   log::info "日志：$mr_result"
