@@ -7,37 +7,44 @@ ta::config() {
   local value=$2
   local opt=$3
 
-  if [ ! -f "$PLUGIN_TA_GLOBAL_RC" ]; then
-    echo "" >>$PLUGIN_TA_GLOBAL_RC
-  fi
-
-  if [ ! -f "$PLUGIN_TA_LOCAL_RC" ]; then
-    echo "" >>$PLUGIN_TA_LOCAL_RC
-  fi
-
   if [ "$key" = "" ]; then
-    local configs="=== Global Config ===\n$(fs::read $PLUGIN_TA_GLOBAL_RC)\n\n=== Local Config ===\n$(fs::read $PLUGIN_TA_LOCAL_RC)"
-    echo -e "$configs"
+    echo -e "=== Global Config ===\n"
+    if [ -f "$PLUGIN_TA_GLOBAL_RC" ]; then
+      echo -e "$(fs::read $PLUGIN_TA_GLOBAL_RC)\n\n"
+    fi
+    echo -e "=== Local Config ===\n"
+    if [ -f "$PLUGIN_TA_LOCAL_RC" ]; then
+      echo -e "$(fs::read $PLUGIN_TA_LOCAL_RC)\n\n"
+    fi
     return 0
   fi
 
   if [ "$value" = "" ]; then
-    value=$(config::get $key $PLUGIN_TA_LOCAL_RC)
+    local val=""
 
-    if [ "$value" = "" ]; then
-      value=$(config::get $key $PLUGIN_TA_GLOBAL_RC)
+    if [ -f "$PLUGIN_TA_LOCAL_RC" ]; then
+      val=$(config::get $key $PLUGIN_TA_LOCAL_RC)
     fi
 
-    if [ "$value" = "" ]; then
+    if [ "val" = "" ]; then
+      if [ -f "$PLUGIN_TA_GLOBAL_RC" ]; then
+        val=$(config::get $key $PLUGIN_TA_GLOBAL_RC)
+      fi
+    fi
+
+    if [ "$val" = "" ]; then
       echo ""
       return 1
     fi
 
-    echo "$value"
+    echo "$val"
     return 0
   fi
 
   if [ "$opt" = "-g" ]; then
+    if [ ! -f "$PLUGIN_TA_GLOBAL_RC" ]; then
+      echo "" >>$PLUGIN_TA_GLOBAL_RC
+    fi
     # @TODO gpm
     if [ "$key" = "project.workdir" ]; then
       if [ -z "$value" ]; then
@@ -61,6 +68,9 @@ ta::config() {
     return 0
   fi
 
+  if [ ! -f "$PLUGIN_TA_LOCAL_RC" ]; then
+    echo "" >>$PLUGIN_TA_LOCAL_RC
+  fi
   config::set $key $value $PLUGIN_TA_LOCAL_RC
   log::info "Set Local Config"
   log::info "$key: $(color::green $value)"
