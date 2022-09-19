@@ -32,11 +32,12 @@ ta::prepare() {
     log::info "[$(timestamp)] node.js is not installed, try to install it ..."
 
     nvm use $PLUGIN_TA_NODE_VERSION
-
-    export NODE_HOME=/usr/local/node
-    export NODE_USER_HOME=$HOME/.node
-    export PATH=$NODE_USER_HOME/bin:$NODE_HOME/bin:$PATH
   fi
+
+  # @FIX npm global bin
+  export NODE_HOME=/usr/local/node
+  export NODE_USER_HOME=$HOME/.node
+  export PATH=$NODE_USER_HOME/bin:$NODE_HOME/bin:$PATH
 
   local current_node_version=$(node -v)
   if [ "$current_node_version" != "$PLUGIN_TA_NODE_VERSION" ]; then
