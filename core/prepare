@@ -14,6 +14,7 @@ ta::prepare() {
     zmicro update
   fi
 
+  export PATH=$ZMICRO_HOME/bin:$PATH
   which nvm >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] prepare nvm (1) ..."
@@ -27,17 +28,17 @@ ta::prepare() {
     fi
   fi
 
+  # @FIX npm global bin
+  export NODE_HOME=/usr/local/node
+  export NODE_USER_HOME=$HOME/.node
+  export PATH=$NODE_USER_HOME/bin:$NODE_HOME/bin:$PATH
+
   which node >>/dev/null
   if [ $? -ne 0 ]; then
     log::info "[$(timestamp)] node.js is not installed, try to install it ..."
 
     nvm use $PLUGIN_TA_NODE_VERSION
   fi
-
-  # @FIX npm global bin
-  export NODE_HOME=/usr/local/node
-  export NODE_USER_HOME=$HOME/.node
-  export PATH=$NODE_USER_HOME/bin:$NODE_HOME/bin:$PATH
 
   local current_node_version=$(node -v)
   if [ "$current_node_version" != "$PLUGIN_TA_NODE_VERSION" ]; then
