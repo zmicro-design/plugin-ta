@@ -1,0 +1,31 @@
+#!/bin/bash
+
+help() {
+  echo "Debug - ta debug"
+  echo ""
+  echo "Usage:"
+  echo "  ta debug [args...]"
+  echo ""
+  echo "Options:"
+  echo "  --docker <url>  docker url"
+  echo "  --api <url>     api url"
+  echo ""
+  echo "Examples:"
+  echo "  ta debug --docker http://example.com"
+  echo "  ta debug --docker http://example1.com --api http://example2.com"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::debug "$@"
+}
+
+run() {
+  core "$@"
+}
+
+run "$@"

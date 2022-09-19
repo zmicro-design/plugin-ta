@@ -1,0 +1,59 @@
+#!/bin/bash
+
+ta::debug() {
+  which eunomia-runner-unicom >>/dev/null
+  if [ $? -ne 0 ]; then
+    log::info "[dependencies] eunomia-runner-unicom is not installed, try to install it ..."
+    zmicro package install eunomia-runner-unicom
+  fi
+
+  local docker_url=""
+  # common service default port: 8992
+  local api_url="http://127.0.0.1:8992"
+
+  while [ $# -gt 0 ]; do
+    case $1 in
+    --docker)
+      docker_url=$2
+      shift 2
+      ;;
+    --api)
+      api_url=$2
+      shift 2
+      ;;
+    *)
+      log::error "unknown option $1"
+      exit 1
+      ;;
+    esac
+  done
+
+  if [ "$docker_url" = "" ]; then
+    log::error "docker url is required, please use --docker <url>"
+    exit 1
+  fi
+
+  log::info "##################################"
+  log::info "#           TA DEBUG             #"
+  log::info "##################################"
+  log::info "######## DEBUG INFO START ########"
+  log::info "# docker_url: $docker_url"
+  log::info "# api_url: $api_url"
+  log::info "######## DEBUG INFO END ########"
+  echo ""
+
+  ta::debug_open_browser >/dev/null &
+
+  eunomia-runner-unicom dev --frontend $docker_url --backend $api_url
+}
+
+ta::debug_open_browser() {
+  local url="http://127.0.0.1:9000"
+
+  sleep 1
+
+  os::open $url
+}
+
+export -f ta::debug
+export -f ta::debug_open_browser
