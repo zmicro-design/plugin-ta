@@ -15,7 +15,7 @@ ta::prepare() {
   fi
 
   # ta check update
-  if [ "$(plugin::has_update ${PLUGIN_NAME})" == "true" ]; then
+  if [ "$(plugin::has_update ${PLUGIN_NAME})" = "true" ]; then
     log::info "[$(timestamp)] ta version found update($(plugin::get_remote_version ${PLUGIN_NAME})), try to update it ..."
     ta update
   fi
