@@ -101,6 +101,12 @@ ta::prepare() {
   if [ "$(npm config get registry)" != "https://registry.npmmirror.com/" ]; then
     nrm use $PLUGIN_TA_NPM_REGISTRY >>/dev/null
   fi
+
+  which zx >>/dev/null
+  if [ "$?" != "0" ]; then
+    # log::info "[$(timestamp)] zx is not installed, try to install it ..."
+    npm i -g zx
+  fi
 }
 
 export -f ta::helloworld
