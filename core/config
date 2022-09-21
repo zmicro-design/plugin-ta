@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ta::config() {
-  ta::prepare
+  # ta::prepare
 
   local key=$1
   local value=$2
@@ -26,7 +26,7 @@ ta::config() {
       val=$(config::get $key $PLUGIN_TA_LOCAL_RC)
     fi
 
-    if [ "val" = "" ]; then
+    if [ "$val" = "" ]; then
       if [ -f "$PLUGIN_TA_GLOBAL_RC" ]; then
         val=$(config::get $key $PLUGIN_TA_GLOBAL_RC)
       fi
