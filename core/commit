@@ -30,6 +30,45 @@ ta:commit() {
     esac
   done
 
+  if [ -n "$(git status --porcelain)" ]; then
+    ta::check_add
+  else
+    echo "本地暂无可以提交的文件";
+  fi
+}
+
+# 检查是否有未 add 的文件并根据选择 commit
+ta::check_add() {
+  local add="add文件并提交"
+  local nadd="不用add文件并提交"
+  local quit="退出"
+  local add_types=("$add" "$nadd" "$quit")
+
+  if [ "$(git::is_ready_to_commit)" = "false" ]; then
+    local add_type="$1"
+
+    if [ -z "$add_type" ]; then
+      os::inquirer add_type "select" add_types "发现未add文件"
+    fi
+
+    case $add_type in
+      "$add")
+        # add 文件后提交
+        git add .
+        ta::commit
+      ;;
+      "$nadd")
+        # 不 add 直接提交
+        ta::commit
+      ;;
+    esac
+  else
+    ta::commit
+  fi
+}
+
+# commit 提交
+ta::commit() {
   # sleep 3
   gpm commit
 
@@ -106,5 +145,7 @@ export -f ta:commit
 
 export -f ta::should_merge_remote
 export -f ta::merge_remote
+export -f ta::commit
+export -f ta::check_add
 
 export -f ta::commit_push
