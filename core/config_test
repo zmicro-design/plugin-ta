@@ -1,0 +1,31 @@
+#!/bin/bash
+
+function test_ta::config() {
+  rm .tarc
+
+  local key="DEV_SCRIPT"
+  local expected=""
+  testing::expect \
+    "${FUNCNAME[0]}" \
+    "to_equal" \
+    "$expected" \
+    "$(ta::config $key)"
+
+  expected="dev"
+  ta::config $key $expected
+
+  testing::expect \
+    "${FUNCNAME[0]}" \
+    "to_equal" \
+    "$expected" \
+    "$(ta::config $key)"
+
+  rm .tarc
+
+  expected=""
+  testing::expect \
+    "${FUNCNAME[0]}" \
+    "to_equal" \
+    "$expected" \
+    "$(ta::config $key)"
+}
