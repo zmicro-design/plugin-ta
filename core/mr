@@ -6,7 +6,12 @@ ta::mr() {
   local is_feature="true"
 
   local type=$(echo $current_branch_name | awk -F '/' '{print $1}')
-  if [ "$type" != "feature" ]; then
+  local target_branch_name="sprint_dev"
+  if [ "$type" = "hotfix" ]; then
+    local branch=$(echo $current_branch_name | awk -F '/' '{print $2}')
+    local version=$(echo $branch | awk -F '_' '{print $1}')
+    target_branch_name="release/${version}"
+  elif [ "$type" != "feature" ] && [ "$type" != "fix" ]; then
     is_feature="false"
     log::info "❤️暂不支持非feature分支❤️"
     return 1
@@ -25,7 +30,7 @@ ta::mr() {
   local tmp_data_file=$(os::tmp_file)
   cat <<-END > $tmp_data_file
 {
-  "target_branch": "sprint_dev",
+  "target_branch": "${target_branch_name}",
   "source_branch": "${current_branch_name}",
   "title": "${current_branch_name}",
   "assignee_id": "13",
