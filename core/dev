@@ -3,15 +3,31 @@
 ta::dev() {
   ta::prepare
 
-  local key="DEV_SCRIPT"
-  local cmd=$(ta::config ${key})
+  local package_json=$PWD/package.json
 
-  if [ "$cmd" = "" ]; then
-    npm run dev --if-present
-    npm run start --if-present
-  else
-    npm run "$cmd"
+  # COMMAND from .tarc
+  local custom_command=$(ta::config "DEV_COMMAND")
+  if [ -n "$custom_command" ]; then
+    eval "$custom_command"
+    return
   fi
+
+  local key="DEV_SCRIPT"
+  local npm_command=$(ta::config ${key})
+
+  # COMMAND from package.json
+  if [ -f "$package_json" ]; then
+    if [ "$npm_command" = "" ]; then
+      npm run dev --if-present
+      npm run start --if-present
+    else
+      npm run "$npm_command"
+    fi
+    return
+  fi
+
+  # ERROR: NO COMMAND FOUND
+  log::error "[$(timestamp)] failed to dev, no logic found"
 }
 
 export -f ta::dev

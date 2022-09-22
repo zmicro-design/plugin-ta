@@ -3,9 +3,25 @@
 ta::bootstrap() {
   ta::prepare
 
-  npm run clear --if-present
+  local package_json=$PWD/package.json
 
-  npm i --legacy-peer-deps
+  # COMMAND from .tarc
+  local bootstrap_command=$(ta::config BOOTSTRAP_COMMAND)
+  if [ -n "$bootstrap_command" ]; then
+    eval "$bootstrap_command"
+    return
+  fi
+
+  # COMMAND from package.json
+  if [ -f "$package_json" ]; then
+    npm run clear --if-present
+
+    npm i --legacy-peer-deps
+    return
+  fi
+
+  # ERROR: NO COMMAND FOUND
+  log::error "[$(timestamp)] failed to bootstrap, no logic found"
 }
 
 export -f ta::bootstrap
