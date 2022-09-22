@@ -8,7 +8,9 @@ ta::mr() {
   # 检查repo是不是ta repo
   local git_repo_url=$(git config --get remote.origin.url)
   # http://10.27.249.150:8888/thinking-frontend/ta-multiverse
+  # http://10.27.249.150:8888/thinking-frontend/ta-multiverse.git
   local git_repo_full_name=$(echo $git_repo_url |awk -F '10.27.249.150:8888/' '{print $2}')
+  git_repo_full_name=$(echo $git_repo_full_name |awk -F '.git' '{print $1}')
   if [ "$git_repo_full_name" = "" ]; then
     log::info "❤️暂不支持非ta项目❤️"
     return 1
