@@ -5,6 +5,26 @@ ta::mr() {
 
   local is_feature="true"
 
+  # 检查repo是不是ta repo
+  local git_repo_url=$(git config --get remote.origin.url)
+  # http://10.27.249.150:8888/thinking-frontend/ta-multiverse
+  # http://10.27.249.150:8888/thinking-frontend/ta-multiverse.git
+  local git_repo_full_name=$(echo $git_repo_url |awk -F '10.27.249.150:8888/' '{print $2}')
+  git_repo_full_name=$(echo $git_repo_full_name |awk -F '.git' '{print $1}')
+  if [ "$git_repo_full_name" = "" ]; then
+    log::info "❤️暂不支持非ta项目❤️"
+    return 1
+  fi
+  local git_repo_group=$(echo $git_repo_full_name |awk -F '/' '{print $1}')
+  local git_repo_project=$(echo $git_repo_full_name |awk -F '/' '{print $2}')
+  local repo_name="$git_repo_group"
+  if [ "$git_repo_group" = "" ]; then
+    repo_name="$git_repo_full_name"
+  elif [ "$git_repo_project" != "" ]; then
+    repo_name="${git_repo_group}%2F${git_repo_project}"
+  fi
+  
+  # 设置target branch
   local type=$(echo $current_branch_name | awk -F '/' '{print $1}')
   local target_branch_name="sprint_dev"
   if [ "$type" = "hotfix" ]; then
@@ -13,13 +33,13 @@ ta::mr() {
     target_branch_name="release/${version}"
   elif [ "$type" != "feature" ] && [ "$type" != "fix" ]; then
     is_feature="false"
-    log::info "❤️暂不支持非feature分支❤️"
+    log::info "❤️暂时仅支持feature、hotfix、fix分支❤️"
     return 1
   fi
 
+  # 设置gitlab key
   local key="GITLAB_TOKEN"
   local gitlab_token=$(ta::config ${key})
-  
   if [ "$gitlab_token" = "" ]; then
     log::info "没有发现gitlab token，请打开下面链接获取token"
     log::info "http://10.27.249.150:8888/profile/personal_access_tokens"
@@ -27,6 +47,7 @@ ta::mr() {
     ta::config $key "$gitlab_token" -g
   fi
 
+  # 设置请求体
   local tmp_data_file=$(os::tmp_file)
   cat <<-END > $tmp_data_file
 {
@@ -39,8 +60,10 @@ ta::mr() {
 }
 END
 
-  local mr_result=$(curl --request POST -H "PRIVATE-TOKEN: ${gitlab_token}" -H "Content-Type: application/json" -d @${tmp_data_file} "http://10.27.249.150:8888/api/v4/projects/thinking-frontend%2Fta-multiverse/merge_requests" 2>/dev/null)
+  # 发送mr请求
+  local mr_result=$(curl --request POST -H "PRIVATE-TOKEN: ${gitlab_token}" -H "Content-Type: application/json" -d @${tmp_data_file} "http://10.27.249.150:8888/api/v4/projects/${repo_name}/merge_requests" 2>/dev/null)
 
+  # 解析mr请求返回体中error信息
   local msg=$(echo $mr_result | awk -F 'message":' '{print $2}')
   if [ "$msg" != "" ]; then
     local msg2=$(echo $msg |awk -F '401' '{print $2}')
