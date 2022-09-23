@@ -3,7 +3,15 @@
 ta::debug() {
   which eunomia-runner-unicom >>/dev/null
   if [ $? -ne 0 ]; then
-    log::info "[dependencies] eunomia-runner-unicom is not installed, try to install it ..."
+    log::info "[$(timestamp)] debug tool is not installed, try to install it ..."
+    zmicro package install eunomia-runner-unicom
+  fi
+
+  # check version
+  local latest_version=$(curl -s http://10.27.249.150:8888/eunomia/shared/raw/master/eunomia-runner-unicom/version)
+  local current_version=$(eunomia-runner-unicom --version)
+  if [ "$current_version" != "$latest_version" ]; then
+    log::info "[$(timestamp)] debug tool is outdated, try to update it ..."
     zmicro package install eunomia-runner-unicom
   fi
 
