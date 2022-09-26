@@ -103,9 +103,19 @@ ta::prepare() {
     npm i -g @cliz/nrm # --force
   fi
 
+  local current_nrm_version=$(nrm -V)
+  if [ "$current_nrm_version" != "$PLUGIN_TA_NRM_VERSION" ] && [ "$(version::compare_gt ${current_nrm_version} $PLUGIN_TA_NRM_VERSION)" = "false" ]; then
+    log::info "当前 nrm 版本是 $(color::red ${current_nrm_version}), 但是 Ta 系统要求至少 $(color::green ${PLUGIN_TA_NRM_VERSION})"
+    npm i -g @cliz/nrm@$PLUGIN_TA_NRM_VERSION
+  fi
+
   # @TODO should compare with $PLUGIN_TA_NPM_REGISTRY
-  if [ "$(npm config get registry)" != "https://registry.npmmirror.com/" ]; then
-    nrm use $PLUGIN_TA_NPM_REGISTRY >>/dev/null
+  if [ "$(npm config get registry)" != "$PLUGIN_TA_NPM_REGISTRY" ]; then
+    nrm use $PLUGIN_TA_NPM_REGISTRY_ALIAS >>/dev/null
+  fi
+
+  if [ "$(npm config get registry)" != "$PLUGIN_TA_NPM_REGISTRY" ]; then
+    npm set registry $PLUGIN_TA_NPM_REGISTRY >>/dev/null
   fi
 }
 
