@@ -3,40 +3,27 @@
 ta::mr() {
   local current_branch_name=$(git::branch)
 
-  local is_feature="true"
-
   # 检查repo是不是ta repo
-  local git_repo_url=$(git config --get remote.origin.url)
+  local git_repo_url=$(git::repo_url)
   # http://10.27.249.150:8888/thinking-frontend/ta-multiverse
   # http://10.27.249.150:8888/thinking-frontend/ta-multiverse.git
-  local git_repo_full_name=$(echo $git_repo_url |awk -F '10.27.249.150:8888/' '{print $2}')
-  git_repo_full_name=$(echo $git_repo_full_name |awk -F '.git' '{print $1}')
-  if [ "$git_repo_full_name" = "" ]; then
+  # ssh://git@139.224.169.199:26662/thinking-frontend/ta-multiverse.git
+
+  local checkHttpUrl=$(echo $git_repo_url |awk -F '10.27.249.150:8888/' '{print $2}')
+  local checkSshUrl=$(echo $git_repo_url |awk -F '139.224.169.199:26662/' '{print $2}')
+  if [ "$checkHttpUrl" = "" ] && [ "$checkSshUrl" = "" ]; then
     log::info "❤️暂不支持非ta项目❤️"
     return 1
   fi
-  local git_repo_group=$(echo $git_repo_full_name |awk -F '/' '{print $1}')
-  local git_repo_project=$(echo $git_repo_full_name |awk -F '/' '{print $2}')
-  local repo_name="$git_repo_group"
-  if [ "$git_repo_group" = "" ]; then
-    repo_name="$git_repo_full_name"
-  elif [ "$git_repo_project" != "" ]; then
+
+  # 获得repo的group和projectName
+  local git_repo_group=$(git::namespace)
+  local git_repo_project=$(git::basename)
+  local repo_name="$git_repo_project"
+  if [ "$git_repo_group" != "" ]; then
     repo_name="${git_repo_group}%2F${git_repo_project}"
   fi
   
-  # 设置target branch
-  local type=$(echo $current_branch_name | awk -F '/' '{print $1}')
-  local target_branch_name="sprint_dev"
-  if [ "$type" = "hotfix" ]; then
-    local branch=$(echo $current_branch_name | awk -F '/' '{print $2}')
-    local version=$(echo $branch | awk -F '_' '{print $1}')
-    target_branch_name="release/${version}"
-  elif [ "$type" != "feature" ] && [ "$type" != "fix" ]; then
-    is_feature="false"
-    log::info "❤️暂时仅支持feature、hotfix、fix分支❤️"
-    return 1
-  fi
-
   # 设置gitlab key
   local key="GITLAB_TOKEN"
   local gitlab_token=$(ta::config ${key})
@@ -45,6 +32,23 @@ ta::mr() {
     log::info "http://10.27.249.150:8888/profile/personal_access_tokens"
     os::inquirer gitlab_token "text" "请输入gitlab token" true
     ta::config $key "$gitlab_token" -g
+  fi
+
+  # 设置target branch
+  local type=$(echo $current_branch_name | awk -F '/' '{print $1}')
+  local target_branch_name="sprint_dev"
+  if [ "$type" = "hotfix" ]; then
+    local branch=$(echo $current_branch_name | awk -F '/' '{print $2}')
+    local version=$(echo $branch | awk -F '_' '{print $1}')
+    target_branch_name="release/${version}"
+  fi
+  if [ "$type" != "feature" ] && [ "$type" != "fix" ] && [ "$type" != "hotfix" ]; then
+    os::inquirer target_branch_name "text" "请输入目标分支" true
+  else
+    os::inquirer value "text" "请输入目标分支" true ${target_branch_name}
+    if [ "$value" != "" ]; then
+      target_branch_name="${value}"
+    fi
   fi
 
   # 设置请求体
@@ -84,7 +88,8 @@ END
   local err_conflict=$(echo $mr_result | awk -F '"has_conflicts":true' '{print $2}')
 
   if [ "$err_conflict" != "" ] || [ "$err_cannot_be_merged" != "" ]; then
-    log::info "MR已提交，但是有冲突或分支出错"
+    log::info "MR已提交，但是有冲突或分支出错，请前往mergeRequest页面查看详情"
+    log::info "http://10.27.249.150:8888/${git_repo_group}/${git_repo_project}/merge_requests"
     return 1
   fi
 
