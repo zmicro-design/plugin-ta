@@ -11,7 +11,7 @@ ta::mr() {
 
   local check_http_url=$(echo $git_repo_url | awk -F '10.27.249.150:8888/' '{print $2}')
   local check_ssh_url=$(echo $git_repo_url | awk -F '139.224.169.199:26662/' '{print $2}')
-  if [ "$checkHttpUrl" = "" ] && [ "$checkSshUrl" = "" ]; then
+  if [ "$check_http_url" = "" ] && [ "$check_ssh_url" = "" ]; then
     log::info "❤️暂不支持非ta项目❤️"
     return 1
   fi
