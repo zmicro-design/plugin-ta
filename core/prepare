@@ -16,7 +16,7 @@ ta::prepare() {
 
   # ta check update
   if [ "$(plugin::has_update ${PLUGIN_NAME})" = "true" ]; then
-    log::info "[$(timestamp)] ta version found update($(plugin::get_remote_version ${PLUGIN_NAME})), try to update it ..."
+    log::info "[$(timestamp)] ta version found update(${PLUGIN_VERSION} => $(color::green $(plugin::get_remote_version ${PLUGIN_NAME}))), try to update it ..."
     ta update
   fi
 
@@ -75,6 +75,9 @@ ta::prepare() {
       log::info "CI 环境默认安装 $(color::green ${PLUGIN_TA_NPM_VERSION})"
     fi
 
+    npm i -g npm@$PLUGIN_TA_NPM_VERSION
+  elif [ "$(which npm)" != "$NODE_USER_HOME/bin/npm" ]; then
+    log::info "修复 Mac M1 部分系统 NPM CLI Bug（EPERM: operation not permitted, uv_cwd）..."
     npm i -g npm@$PLUGIN_TA_NPM_VERSION
   fi
 
