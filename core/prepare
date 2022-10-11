@@ -16,7 +16,15 @@ ta::prepare() {
 
   # ta check update
   if [ "$(plugin::has_update ${PLUGIN_NAME})" = "true" ]; then
-    log::info "[$(timestamp)] ta version found update(${PLUGIN_VERSION} => $(color::green $(plugin::get_remote_version ${PLUGIN_NAME}))), try to update it ..."
+    local NEW_VERSION=$(plugin::get_remote_version ${PLUGIN_NAME})
+    # @TODO
+    echo $NEW_VERSION | grep "✖" >>/dev/null 2>&1
+    if [ "$?" = "0" ]; then
+      log::error "[$(timestamp)] get new version error(detail: $NEW_VERSION)"
+      exit 1
+    fi
+
+    log::info "[$(timestamp)] ta version found update(${PLUGIN_VERSION} => $(color::green $NEW_VERSION)), try to update it ..."
     ta update
   fi
 
