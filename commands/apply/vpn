@@ -1,0 +1,25 @@
+#!/bin/bash
+
+help() {
+  echo "VPN - 终端科学上网功能"
+  echo ""
+  echo "Usage:"
+  echo "  ta apply vpn [args...]"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  log::info "[$(timestamp)] 启用终端科学上网 ..."
+
+  zmicro apply proxy
+}
+
+run() {
+  core $@
+}
+
+run $@
