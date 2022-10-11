@@ -26,8 +26,14 @@ ta::dev() {
     return
   fi
 
+  # not a git repository
+  if [ ! -d "$PWD/.git" ]; then
+    log::error "[$(timestamp)] 当前目录不是有效目录，请在仓库目录中执行该命令"
+    return 1
+  fi
+
   # ERROR: NO COMMAND FOUND
-  log::error "[$(timestamp)] 当前目录不是有效目录，请在仓库目录中执行该命令"
+  log::error "[$(timestamp)] failed to dev, no logic found"
   return 1
 }
 
