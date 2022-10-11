@@ -76,6 +76,9 @@ ta::commit() {
   local branch=$(git::branch)
   if [ "$(ta::should_merge_remote $repo_name $branch)" = "true" ]; then
     ta::merge_remote
+    if [ "$?" != "0" ]; then
+      return 1
+    fi
   fi
 
   if [ "$no_push" != "true" ]; then
