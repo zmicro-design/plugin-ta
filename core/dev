@@ -27,7 +27,8 @@ ta::dev() {
   fi
 
   # ERROR: NO COMMAND FOUND
-  log::error "[$(timestamp)] failed to dev, no logic found"
+  log::error "[$(timestamp)] 当前目录不是有效目录，请在仓库目录中执行该命令"
+  return 1
 }
 
 export -f ta::dev
