@@ -3,6 +3,13 @@
 ta::dev() {
   ta::prepare
 
+  # 修复 nx daemon process terminated and closed the connection
+  #   https://github.com/nrwl/nx/issues/12237
+  #   https://nx.dev/more-concepts/nx-daemon#turning-it-off
+  export WEBPACK_FS_CACHE="none"
+  export NX_DAEMON=false
+  # END
+
   local package_json=$PWD/package.json
 
   # handle ta-proxy not terminated correctly
