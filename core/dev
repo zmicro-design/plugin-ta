@@ -5,6 +5,12 @@ ta::dev() {
 
   local package_json=$PWD/package.json
 
+  # handle ta-proxy not terminated correctly
+  nc -z -v -n 127.0.0.1 10010 >>/dev/null 2>&1
+  if [ "$?" = "0" ]; then
+    kill -9 $(lsof -t -i:10010)
+  fi
+
   # COMMAND from .tarc
   local custom_command=$(ta::config "DEV_COMMAND")
   if [ -n "$custom_command" ]; then
