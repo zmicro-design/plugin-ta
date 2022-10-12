@@ -1,0 +1,54 @@
+#!/bin/bash
+
+ta::upgrade() {
+  local package=$1
+  if [ -z "$package" ]; then
+    log::error "[$(timestamp)][ta::upgrade] package is required"
+    return 1
+  fi
+
+  log::success "[$(timestamp)] upgrading $package ..."
+  case $package in
+  zmicro)
+    ta::upgrade_zmicro
+    ;;
+  nvm)
+    ta::upgrade_nvm
+    ;;
+  gpm)
+    ta::upgrade_gpm
+    ;;
+  nrm)
+    ta::upgrade_nrm
+    ;;
+  *)
+    log::error "[$(timestamp)][ta::upgrade] package($package) is not valid"
+    return 1
+    ;;
+  esac
+
+  log::success "[$(timestamp)] succeed to upgrade $package."
+}
+
+ta::upgrade_zmicro() {
+  zmicro update
+}
+
+ta::upgrade_nvm() {
+  nvm update
+}
+
+ta::upgrade_gpm() {
+  npm i -g @cliz/gpm
+}
+
+ta::upgrade_nrm() {
+  npm i -g @cliz/nrm
+}
+
+export -f ta::upgrade
+
+export -f ta::upgrade_zmicro
+export -f ta::upgrade_nvm
+export -f ta::upgrade_gpm
+export -f ta::upgrade_nrm

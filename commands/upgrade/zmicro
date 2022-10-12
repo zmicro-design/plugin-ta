@@ -1,0 +1,23 @@
+#!/bin/bash
+
+help() {
+  echo "Zmicro - upgrade zmicro"
+  echo ""
+  echo "Usage:"
+  echo "  ta upgrade zmicro"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::upgrade zmicro
+}
+
+run() {
+  core $@
+}
+
+run $@
