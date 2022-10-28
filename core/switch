@@ -1,0 +1,37 @@
+#!/bin/bash
+
+ta::switch() {
+  ta::prepare
+
+  local version=$1
+  if [ -z "$version" ]; then
+    log::error "[ta::switch] version is required."
+    return 1
+  fi
+
+  # check is clean
+  if [ "$(git::is_changed)" = "true" ]; then
+    log::error "[ta::switch] workspace is not clean, please commit before switch."
+    return 1
+  fi
+
+  local branch=release/$version
+  # if [ "$version" = "$PLUGIN_TA_AVAILABLE_VERSION_LATEST" ]; then
+    
+  # fi
+}
+
+ta::switch_save_node_modules() {
+  #
+  echo "WIP"
+}
+
+ta::switch_restore_node_modules() {
+  #
+  echo "WIP"
+}
+
+export -f ta::switch
+
+export -f ta::switch_save_node_modules
+export -f ta::switch_restore_node_modules

@@ -1,0 +1,40 @@
+#!/bin/bash
+
+help() {
+  echo "Switch - switch version"
+  echo ""
+  echo "Usage:"
+  echo "  ta switch [options...] <version>"
+  # echo ""
+  # echo "Options:"
+  # echo "    --no-push   Don't push the commit to remote"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  local version=$1
+  if [ -z "$version" ]; then
+    # log::error "[$(timestamp)] version is required."
+    # exit 1
+    local avaliables_version=(
+      4.0
+      3.8
+      3.7
+    )
+
+    os::inquirer version "select" avaliables_version "Select a version" true
+    # os::inquirer version "select" PLUGIN_TA_AVAILABLE_VERSIONS "Select a version" true
+  fi
+
+  ta::switch $version
+}
+
+run() {
+  core "$@"
+}
+
+run "$@"

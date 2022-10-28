@@ -16,3 +16,10 @@ export PLUGIN_TA_LOCAL_RC=$PWD/.tarc
 
 export PLUGIN_TA_NPM_REGISTRY=https://npm.thinkingdata.cn:3443/
 export PLUGIN_TA_NPM_REGISTRY_ALIAS=td
+
+export PLUGIN_TA_AVAILABLE_VERSIONS=(
+  4.0
+  3.8
+  3.7
+)
+export PLUGIN_TA_AVAILABLE_VERSION_LATEST="4.0"
