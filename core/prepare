@@ -8,6 +8,7 @@ ta::prepare() {
   # ta::auto_update >/dev/null 2>&1 &
 
   # zmicro check version
+  log::debug "[$(timestamp)] check zmicro version ..."
   local zmicro_version="$(version::zmicro)"
   if [ "$(semver::compare_gte ${zmicro_version} $PLUGIN_TA_ZMICRO_VERSION)" != "true" ]; then
     log::info "[$(timestamp)] zmicro version found update, try to update it ..."
@@ -15,6 +16,7 @@ ta::prepare() {
   fi
 
   # ta check update
+  log::debug "[$(timestamp)] check ta update ..."
   if [ "$(plugin::has_update ${PLUGIN_NAME})" = "true" ]; then
     local NEW_VERSION=$(plugin::get_remote_version ${PLUGIN_NAME})
     # @TODO
@@ -29,6 +31,7 @@ ta::prepare() {
   fi
 
   export PATH=$ZMICRO_HOME/bin:$PATH
+  log::debug "[$(timestamp)] check nvm ..."
   which nvm >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] prepare nvm (1) ..."
@@ -47,6 +50,7 @@ ta::prepare() {
   export NODE_USER_HOME=$HOME/.node
   export PATH=$NODE_USER_HOME/bin:$NODE_HOME/bin:$PATH
 
+  log::debug "[$(timestamp)] check node exist ..."
   which node >>/dev/null
   if [ $? -ne 0 ]; then
     log::info "[$(timestamp)] node.js is not installed, try to install it ..."
@@ -54,6 +58,7 @@ ta::prepare() {
     nvm use $PLUGIN_TA_NODE_VERSION
   fi
 
+  log::debug "[$(timestamp)] check node version ..."
   local current_node_version=$(node -v)
   if [ "$current_node_version" != "$PLUGIN_TA_NODE_VERSION" ]; then
     log::info "当前 Node.js 版本是 $(color::red ${current_node_version}), 但是 Ta 系统要求 $(color::green ${PLUGIN_TA_NODE_VERSION})"
@@ -70,6 +75,7 @@ ta::prepare() {
     nvm use $PLUGIN_TA_NODE_VERSION
   fi
 
+  log::debug "[$(timestamp)] check npm version ..."
   local current_npm_version=$(npm -v)
   if [ "$current_npm_version" != "$PLUGIN_TA_NPM_VERSION" ] && [ "$(version::compare_gt ${current_npm_version} $PLUGIN_TA_NPM_VERSION)" = "false" ]; then
     log::info "当前 npm 版本是 $(color::red ${current_npm_version}), 但是 Ta 系统要求至少 $(color::green ${PLUGIN_TA_NPM_VERSION})"
@@ -89,12 +95,14 @@ ta::prepare() {
     npm i -g npm@$PLUGIN_TA_NPM_VERSION
   fi
 
+  log::debug "[$(timestamp)] check rimraf ..."
   which rimraf >>/dev/null
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] rimraf is not installed, try to install it ..."
     npm i -g rimraf # --force
   fi
 
+  log::debug "[$(timestamp)] check gpm ..."
   which gpm >>/dev/null
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] gpm is not installed, try to install it ..."
@@ -108,18 +116,21 @@ ta::prepare() {
     fi
   fi
 
+  log::debug "[$(timestamp)] check nrm ..."
   which nrm >>/dev/null
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] nrm is not installed, try to install it ..."
     npm i -g @cliz/nrm # --force
   fi
 
+  log::debug "[$(timestamp)] check nrm version ..."
   local current_nrm_version=$(nrm -V)
   if [ "$current_nrm_version" != "$PLUGIN_TA_NRM_VERSION" ] && [ "$(version::compare_gt ${current_nrm_version} $PLUGIN_TA_NRM_VERSION)" = "false" ]; then
     log::info "当前 nrm 版本是 $(color::red ${current_nrm_version}), 但是 Ta 系统要求至少 $(color::green ${PLUGIN_TA_NRM_VERSION})"
     npm i -g @cliz/nrm@$PLUGIN_TA_NRM_VERSION
   fi
 
+  log::debug "[$(timestamp)] check npm registry version ..."
   # @TODO should compare with $PLUGIN_TA_NPM_REGISTRY
   if [ "$(npm config get registry)" != "$PLUGIN_TA_NPM_REGISTRY" ]; then
     nrm use $PLUGIN_TA_NPM_REGISTRY_ALIAS >>/dev/null
