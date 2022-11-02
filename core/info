@@ -3,8 +3,8 @@
 ta::info() {
   ta::prepare
 
-  log::info "node: $(color::green $(node -v))"
-  log::info "npm: $(color::green v$(npm -v))"
+  log::info "node: $(color::green $(node -v)) ($(which node))"
+  log::info "npm: $(color::green v$(npm -v)) ($(which npm))"
 
   if [ "$(os::has_command yarn)" = "true" ]; then
     log::info "yarn: $(color::green v$(yarn -v))"
