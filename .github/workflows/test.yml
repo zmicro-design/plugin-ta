@@ -68,8 +68,8 @@ jobs:
         run: zmicro test core
 
       - name: Run Setup
-        run: ta setup
+        run: zmicro ta setup
       
       - name: Run Info
-        run: ta info
+        run: zmicro ta info
 
