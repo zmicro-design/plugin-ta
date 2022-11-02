@@ -67,4 +67,9 @@ jobs:
       - name: Run Test Cases
         run: zmicro test core
 
+      - name: Run Setup
+        run: ta setup
+      
+      - name: Run Info
+        run: ta info
 
