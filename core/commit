@@ -83,6 +83,9 @@ ta::commit() {
 
   if [ "$no_push" != "true" ]; then
     ta::commit_push
+    if [ "$?" != "0" ]; then
+      return 1
+    fi
   fi
 }
 
@@ -112,6 +115,7 @@ ta::should_merge_remote() {
     res="false"
   fi
 
+  # 符合分支名开头为 feature 的条件
   echo $res
 }
 
@@ -119,29 +123,29 @@ ta::should_merge_remote() {
 ta::merge_remote() {
   local upstream_branch=$1
   if [ -z "$upstream_branch" ]; then
-    upstream_branch="origin/sprint_dev"
+    upstream_branch="sprint_dev"
   fi
 
   local branch=$(git::branch)
   # 如果远程存在当前分支
-  if [ "$(git::has_branch $branch)" = "true" ]; then
-    log::info "[$(timestamp)] 尝试合并当前分支（$branch）远程代码 ..."
-    git pull origin $branch
+  if [ "$(git::has_branch ${branch})" = "true" ]; then
+    log::info "[$(timestamp)] 开始合并当前分支（${branch}）远程代码 ..."
+    git pull origin ${branch} --quiet
     if [ "$?" != "0" ]; then
-      log::error "[$(timestamp)] 同步当前分支（$branch）远程代码失败，请手动解决冲突后再提交！"
+      log::error "[$(timestamp)] 同步当前分支（${branch}）远程代码失败，请手动解决冲突后再提交！"
       return 1
     fi
   fi
 
-  log::info "[$(timestamp)] 符合分支名开头为 feature 的条件，同步 sprint_dev！"
-  git fetch origin
-  git merge $upstream_branch
+  log::info "[$(timestamp)] 开始合并 ${upstream_branch}！"
+  git fetch origin >>/dev/null
+  git merge origin/${upstream_branch} --quiet
   if [ "$?" != "0" ]; then
-    log::error "[$(timestamp)] 同步 sprint_dev 失败，请手动解决冲突后再提交！"
+    log::error "[$(timestamp)] 合并 ${upstream_branch} 失败，请手动解决冲突后再提交！"
     return 1
   fi
 
-  log::success "[$(timestamp)] 同步 sprint_dev 成功！"
+  log::success "[$(timestamp)] 合并 ${upstream_branch} 成功！"
 }
 
 # ta::commit_push 推送代码到远程
@@ -151,7 +155,7 @@ ta::commit_push() {
 
   log::info "[$(timestamp)] 开始推送代码到远程 ..."
 
-  git push origin $branch >>/dev/null
+  git push origin $branch --quiet
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] 推送代码到远端失败！"
     return 1
