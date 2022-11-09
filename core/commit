@@ -117,6 +117,11 @@ ta::should_merge_remote() {
 
 # ta::merge_remote 如果是 feature，说明在开发功能，提交时可以自动 merge 远端 sprint_dev
 ta::merge_remote() {
+  local upstream_branch=$1
+  if [ -z "$upstream_branch" ]; then
+    upstream_branch="origin/sprint_dev"
+  fi
+
   local branch=$(git::branch)
   log::info "[$(timestamp)] 尝试合并当前分支（$branch）远程代码 ..."
   git pull origin $branch
@@ -127,7 +132,7 @@ ta::merge_remote() {
 
   log::info "[$(timestamp)] 符合分支名开头为 feature 的条件，同步 sprint_dev！"
   git fetch origin
-  git merge origin/sprint_dev
+  git merge $upstream_branch
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] 同步 sprint_dev 失败，请手动解决冲突后再提交！"
     return 1
