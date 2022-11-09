@@ -123,11 +123,14 @@ ta::merge_remote() {
   fi
 
   local branch=$(git::branch)
-  log::info "[$(timestamp)] 尝试合并当前分支（$branch）远程代码 ..."
-  git pull origin $branch
-  if [ "$?" != "0" ]; then
-    log::error "[$(timestamp)] 同步当前分支（$branch）远程代码失败，请手动解决冲突后再提交！"
-    return 1
+  # 如果远程存在当前分支
+  if [ "$(git::has_branch $branch)" = "true" ]; then
+    log::info "[$(timestamp)] 尝试合并当前分支（$branch）远程代码 ..."
+    git pull origin $branch
+    if [ "$?" != "0" ]; then
+      log::error "[$(timestamp)] 同步当前分支（$branch）远程代码失败，请手动解决冲突后再提交！"
+      return 1
+    fi
   fi
 
   log::info "[$(timestamp)] 符合分支名开头为 feature 的条件，同步 sprint_dev！"
