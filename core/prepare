@@ -17,7 +17,7 @@ ta::prepare() {
 
   # ta check update
   log::debug "[$(timestamp)] check ta update ..."
-  if [ "$(plugin::has_update ${PLUGIN_NAME})" = "true" ]; then
+  if [ "$(plugin::has_update_speed ${PLUGIN_NAME})" = "true" ]; then
     local NEW_VERSION=$(plugin::get_remote_version ${PLUGIN_NAME})
     # @TODO
     echo $NEW_VERSION | grep "✖" >>/dev/null 2>&1
