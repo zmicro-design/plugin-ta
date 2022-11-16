@@ -7,6 +7,10 @@ ta::helloworld() {
 ta::prepare() {
   # ta::auto_update >/dev/null 2>&1 &
 
+  if [ "$(lock::request ta_prepare 240)" != "true" ]; then
+    return
+  fi
+
   # zmicro check version
   log::debug "[$(timestamp)] check zmicro version ..."
   local zmicro_version="$(version::zmicro)"
@@ -17,7 +21,7 @@ ta::prepare() {
 
   # ta check update
   log::debug "[$(timestamp)] check ta update ..."
-  if [ "$(plugin::has_update_speed ${PLUGIN_NAME})" = "true" ]; then
+  if [ "$(plugin::has_update ${PLUGIN_NAME})" = "true" ]; then
     local NEW_VERSION=$(plugin::get_remote_version ${PLUGIN_NAME})
     # @TODO
     echo $NEW_VERSION | grep "✖" >>/dev/null 2>&1
