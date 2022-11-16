@@ -16,7 +16,12 @@ ta::bootstrap() {
   if [ -f "$package_json" ]; then
     npm run clear --if-present
 
-    npm i --legacy-peer-deps
+    if [ "$CI" = "true" ]; then
+      npm ci --legacy-peer-deps
+    else
+      npm i --legacy-peer-deps
+    fi
+    
     return
   fi
 
