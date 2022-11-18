@@ -1,22 +1,18 @@
 #!/bin/bash
 
-ta::intl() {
+ta::intl_build() {
   ta::prepare
 
   local intl_config=$PWD/intl.json
   if [ ! -f "$intl_config" ]; then
     log::info "[$(timestamp)] ignore intl by not found intl config: $intl_config"
-    exit 0
+    return 1 0
   fi
 
-  log::info "[$(timestamp)] start to intl ..."
   npx tant-intl build
   if [ $? -ne 0 ]; then
-    log::error "[$(timestamp)] failed to intl: npx tant-intl build failed"
-    exit 1
+    return 1
   fi
-
-  log::info "[$(timestamp)] succeed to intl."
 }
 
-export -f ta::intl
+export -f ta::intl_build
