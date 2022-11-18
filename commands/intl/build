@@ -1,0 +1,30 @@
+#!/bin/bash
+
+help() {
+  echo "Intl - intl build"
+  echo ""
+  echo "Usage:"
+  echo "  intl build [args...]"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  log::info "[$(timestamp)] start to build ..."
+
+  ta::intl_build
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] failed to build"
+  fi
+
+  log::info "[$(timestamp)] succeed to build."
+}
+
+run() {
+  core $@
+}
+
+run $@
