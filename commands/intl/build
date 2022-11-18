@@ -1,7 +1,7 @@
 #!/bin/bash
 
 help() {
-  echo "Intl - intl build"
+  echo "Build - intl build"
   echo ""
   echo "Usage:"
   echo "  intl build [args...]"
@@ -13,14 +13,14 @@ core() {
     exit 0
   fi
 
-  log::info "[$(timestamp)] start to build ..."
+  log::info "[$(timestamp)] start to build intl ..."
 
   ta::intl_build
   if [ "$?" != "0" ]; then
-    log::error "[$(timestamp)] failed to build"
+    log::error "[$(timestamp)] failed to build intl"
   fi
 
-  log::info "[$(timestamp)] succeed to build."
+  log::info "[$(timestamp)] succeed to build intl."
 }
 
 run() {

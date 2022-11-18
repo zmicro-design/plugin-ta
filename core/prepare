@@ -5,6 +5,11 @@ ta::helloworld() {
 }
 
 ta::prepare() {
+  # if in ci development mode, ignore check
+  if [ "$CI" = "true" ]; then
+    return
+  fi
+
   # ta::auto_update >/dev/null 2>&1 &
 
   # zmicro check version
