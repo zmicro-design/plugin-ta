@@ -2,17 +2,8 @@ FROM whatwewant/node:v16-2.0.3
 
 LABEL MAINTAINER="Zero<tobewhatwewant@outlook.com>"
 
-ENV TZ=Asia/Shanghai
-
-# @FIX node-gyp dependens python, and will be built locally
-#   Reference: https://stackoverflow.com/questions/54428608/docker-node-alpine-image-build-fails-on-node-gyp
-RUN apk add --no-cache python3 make g++ git wget curl grep bash
-
 # Zmicro
 RUN NO_LOG=true curl -o- https://raw.githubusercontent.com/zcorky/zmicro/master/install | bash
-
-# @FIX NPM 7 break package-lock.json
-RUN npm i -g npm@6
 
 # @TODO permission denied
 #   EACCES current user ("nobody") does not have permission to access the dev dir "/root/.cache/node-gyp/16.14.2"
@@ -22,8 +13,11 @@ RUN npm -g config set user root
 
 # @FEAT GPM (cli: gpm)
 RUN npm i -g @cliz/gpm \
+  # @FEAT DEBUG (cli: web-terminal)
   @cliz/web-terminal \
+  # @FEAT NOTIFY (cli: nobot)
   @cliz/nobot \
+  # @FEAT OS INFO (cli: os-info)
   @cliz/os-info
 
 # @INSTEAD
