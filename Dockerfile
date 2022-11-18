@@ -36,3 +36,5 @@ ENV CI=true
 RUN zmicro plugin install ta
 
 RUN zmicro ta docker dependencies
+
+ENV PATH="/usr/local/lib/zmicro/bin:${PATH}"
