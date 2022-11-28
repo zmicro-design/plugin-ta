@@ -94,7 +94,7 @@ ta::prepare() {
       log::info "CI 环境默认安装 $(color::green ${PLUGIN_TA_NPM_VERSION})"
     fi
 
-    npm i -g npm@$PLUGIN_TA_NPM_VERSION
+    npm i -g npm@$PLUGIN_TA_NPM_VERSION --registry https://registry.npmmirror.org/
   elif [ "$(which npm)" != "$NODE_USER_HOME/bin/npm" ]; then
     log::info "修复 Mac M1 部分系统 NPM CLI Bug（EPERM: operation not permitted, uv_cwd）..."
     npm i -g npm@$PLUGIN_TA_NPM_VERSION
@@ -104,20 +104,20 @@ ta::prepare() {
   which rimraf >>/dev/null
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] rimraf is not installed, try to install it ..."
-    npm i -g rimraf # --force
+    npm i -g rimraf --registry https://registry.npmmirror.org/ # --force
   fi
 
   log::debug "[$(timestamp)] check gpm ..."
   which gpm >>/dev/null
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] gpm is not installed, try to install it ..."
-    npm i -g @cliz/gpm # --force
+    npm i -g @cliz/gpm --registry https://registry.npmmirror.org/ # --force
   else
     # check version
     local gpm_version="v$(gpm --version)"
     if [ "$(semver::compare_gte ${gpm_version} $PLUGIN_TA_GPM_VERSION)" != "true" ]; then
       log::info "[$(timestamp)] gpm version found update, try to update it ..."
-      npm i -g @cliz/gpm # @$PLUGIN_TA_GPM_VERSION --force
+      npm i -g @cliz/gpm --registry https://registry.npmmirror.org/ # @$PLUGIN_TA_GPM_VERSION --force
     fi
   fi
 
@@ -125,14 +125,14 @@ ta::prepare() {
   which nrm >>/dev/null
   if [ "$?" != "0" ]; then
     log::info "[$(timestamp)] nrm is not installed, try to install it ..."
-    npm i -g @cliz/nrm # --force
+    npm i -g @cliz/nrm --registry https://registry.npmmirror.org/ # --force
   fi
 
   log::debug "[$(timestamp)] check nrm version ..."
   local current_nrm_version=$(nrm -V)
   if [ "$current_nrm_version" != "$PLUGIN_TA_NRM_VERSION" ] && [ "$(version::compare_gt ${current_nrm_version} $PLUGIN_TA_NRM_VERSION)" = "false" ]; then
     log::info "当前 nrm 版本是 $(color::red ${current_nrm_version}), 但是 Ta 系统要求至少 $(color::green ${PLUGIN_TA_NRM_VERSION})"
-    npm i -g @cliz/nrm@$PLUGIN_TA_NRM_VERSION
+    npm i -g @cliz/nrm@$PLUGIN_TA_NRM_VERSION --registry https://registry.npmmirror.org/
   fi
 
   log::debug "[$(timestamp)] check npm registry version ..."
