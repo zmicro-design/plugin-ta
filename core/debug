@@ -1,6 +1,8 @@
 #!/bin/bash
 
 ta::debug() {
+  local port=${PORT:-"10010"}
+
   which eunomia-runner-unicom >>/dev/null
   if [ $? -ne 0 ]; then
     log::info "[$(timestamp)] debug tool is not installed, try to install it ..."
@@ -21,11 +23,11 @@ ta::debug() {
 
   while [ $# -gt 0 ]; do
     case $1 in
-    --docker)
+    --docker | --frontend)
       docker_url=$2
       shift 2
       ;;
-    --api)
+    --api | --backend)
       api_url=$2
       shift 2
       ;;
@@ -50,13 +52,13 @@ ta::debug() {
   log::info "######## DEBUG INFO END ########"
   echo ""
 
-  ta::debug_open_browser >/dev/null &
+  ta::debug_open_browser $port >/dev/null &
 
-  eunomia-runner-unicom dev --frontend $docker_url --backend $api_url
+  eunomia-runner-unicom dev --port $port --frontend $docker_url --backend $api_url
 }
 
 ta::debug_open_browser() {
-  local url="http://127.0.0.1:9000"
+  local url="http://127.0.0.1:$1"
 
   sleep 1
 
