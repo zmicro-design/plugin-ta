@@ -1,0 +1,21 @@
+#!/bin/bash
+
+ta::push() {
+  ta::prepare
+
+  # not a git repository
+  if [ ! -d "$PWD/.git" ]; then
+    log::error "[$(timestamp)] 当前目录不是有效目录，请在仓库目录中执行该命令"
+    return 1
+  fi
+
+  local branch=$(git::branch)
+  if [ -z "$branch" ]; then
+    log::error "[$(timestamp)] 无法获取 Git Branch，请找管理员查看问题"
+    return 1
+  fi
+
+  git push origin $branch
+}
+
+export -f ta::push
