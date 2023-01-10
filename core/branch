@@ -6,36 +6,73 @@ ta::branch() {
   local branch_function="$3"
 
   local upstream_branch="origin/sprint_dev"
+  local available_versions=(
+    4.0 # main
+    4.1 # new
+    3.8 # old
+    3.7
+    3.6
+    3.5
+  )
+  local hotfix_upstreams=(
+    release/3.8
+    release/3.7
+    release/3.6
+    release/3.5
+  )
+  local tb_issue_id=""
+  local tmp_err=$(os::tmp_file)
 
+  log::info "[$(timestamp)] 正在检查分支信息，保证完整性 ..."
   ta::prepare
 
   if [ -z "$branch_type" ]; then
     local branch_types=(feature fix hotfix release)
-    os::inquirer branch_type "select" branch_types "请选择分支类型"
+    os::inquirer branch_type "select" branch_types "请选择分支类型" true
   fi
 
   if [ -z "$branch_version" ]; then
-    os::inquirer branch_version "text" "请输入 TA 版本（例如：4.0）" true
+    os::inquirer branch_version "select" available_versions "请选择 TA 版本（例如：4.0）" true
   fi
 
   if [ -z "$branch_function" ]; then
     os::inquirer branch_function "text" "请输入 TA 功能（例如：add_user_config）" true
   fi
 
-  local branch_name="${branch_type}/${branch_version}_${branch_function}"
-
   if [ "$branch_type" = "hotfix" ]; then
-    os::inquirer upstream_branch "text" "请输入 HotFix 上游分支" true
+    # os::inquirer upstream_branch "text" "请输入 HotFix 上游分支" true
+    os::inquirer upstream_branch "select" hotfix_upstreams "请选择 HotFix 上游分支" true
   # elif [ "$branch_type" = "release" ]; then
   #   os::inquirer upstream_branch "text" "请输入 Release 上游分支" true
   fi
 
-  log::info "[$(timestamp)] 创建分支：$branch_name ..."
+  case $branch_type in 
+    fix | hotfix)
+      os::inquirer tb_issue_id "text" text "请输入 Teambition 任务 ID（可选）"
+      ;;
+  esac
+
+  local branch_name="${branch_type}/${branch_version}_${branch_function}"
+  if [ -n "$tb_issue_id" ]; then
+    branch_name="${branch_name}_tb_${tb_issue_id}"
+  fi
+
+  log::info "[$(timestamp)] 开始创建分支：$branch_name (upstream: $upstream_branch) ..."
 
   git fetch origin >>/dev/null
-  git checkout -b $branch_name $upstream_branch >>/dev/null
+  git checkout -b $branch_name $upstream_branch >>/dev/null 2>$tmp_err
   if [ "$?" != "0" ]; then
-    log::error "[$(timestamp)] 创建分支失败！"
+    log::error "[$(timestamp)] 创建分支失败！可能本地分支已存在？(1)"
+    cat $tmp_err
+    return 1
+  fi
+
+  # push to remote
+  log::success "[$(timestamp)] 正在将分支推送到远程 ..."
+  git push origin $branch_name >>/dev/null 2>$tmp_err
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] 创建分支失败！可能远程分支已被占用？(2)"
+    cat $tmp_err
     return 1
   fi
 
