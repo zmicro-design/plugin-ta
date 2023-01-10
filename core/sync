@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# commit 提交
+ta::sync() {
+  local upstream_branch=$1
+  local repo_name=$(git::basename)
+  local branch=$(git::branch)
+
+  # @TODO
+  if [ -z "$upstream_branch" ]; then
+    upstream_branch="sprint_dev"
+  fi
+
+  ta::merge_remote $upstream_branch
+  if [ "$?" != "0" ]; then
+    return 1
+  fi
+
+  if [ "$no_push" != "true" ]; then
+    ta::commit_push
+    if [ "$?" != "0" ]; then
+      return 1
+    fi
+  fi
+}
+
+export -f ta::sync

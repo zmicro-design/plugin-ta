@@ -1,0 +1,26 @@
+#!/bin/bash
+
+help() {
+  echo "Sync - sync sprint_dev with current branch and put local to remote"
+  echo ""
+  echo "Usage:"
+  echo "  ta sync [options...] [upstream_branch]"
+  echo ""
+  echo "Options:"
+  echo "    --no-push   Don't push the branch to remote"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  ta::sync "$@"
+}
+
+run() {
+  core "$@"
+}
+
+run "$@"
