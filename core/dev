@@ -12,12 +12,6 @@ ta::dev() {
 
   local package_json=$PWD/package.json
 
-  # handle ta-proxy not terminated correctly
-  nc -z -v -n 127.0.0.1 10010 >>/dev/null 2>&1
-  if [ "$?" = "0" ]; then
-    kill -9 $(lsof -t -i:10010)
-  fi
-
   # COMMAND from .tarc
   local custom_command=$(ta::config "DEV_COMMAND")
   if [ -n "$custom_command" ]; then
@@ -30,6 +24,14 @@ ta::dev() {
 
   # COMMAND from package.json
   if [ -f "$package_json" ]; then
+    # handle ta-proxy not terminated correctly
+    if [ "$NO_TA_PROXY" = "" ]; then
+      nc -z -v -n 127.0.0.1 10010 >>/dev/null 2>&1
+      if [ "$?" = "0" ]; then
+        kill -9 $(lsof -t -i:10010)
+      fi
+    fi
+
     if [ "$npm_command" = "" ]; then
       npm run dev --if-present
       npm run start --if-present
