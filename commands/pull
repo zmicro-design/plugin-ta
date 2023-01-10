@@ -1,0 +1,53 @@
+#!/bin/bash
+
+help() {
+  echo "Pull - pull source code from remote git repository with current branch"
+  echo ""
+  echo "Usage:"
+  echo "  ta pull [options...]"
+  echo ""
+  echo "Options:"
+  echo "  --remote-branch <remote_branch>   Merge remote branch"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+  
+  local remote_branch=""
+
+  while [[ $# -gt 0 ]]; do
+    local key=$1
+    local value=$2
+    case $key in
+    -r | --remote-branch)
+      if [ -z "$value" ]; then
+        log::error "[$(timestamp)] remote_branch is required, usage: --remote-branch <remote_branch>"
+        exit 1
+      fi
+
+      os::set_var remote_branch $value
+      shift
+      shift
+      ;;
+    *)
+      if [ "$(string::match $key ^-)" = "true" ]; then
+        log::error "[$(timestamp)] ERROR: unknown parameter \"$key\""
+        exit 1
+      fi
+
+      shift
+      ;;
+    esac
+  done
+
+  ta::pull $remote_branch
+}
+
+run() {
+  core "$@"
+}
+
+run "$@"

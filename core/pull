@@ -1,0 +1,37 @@
+#!/bin/bash
+
+ta::pull() {
+  local remote_branch="$1"
+
+  ta::prepare
+
+  # not a git repository
+  if [ ! -d "$PWD/.git" ]; then
+    log::error "[$(timestamp)] 当前目录不是有效目录，请在仓库目录中执行该命令"
+    return 1
+  fi
+
+  local local_branch=$(git::branch)
+  if [ -z "$local_branch" ]; then
+    log::error "[$(timestamp)] 无法获取本地 Git Branch，请找管理员查看问题"
+    return 1
+  fi
+
+  log::info "[$(timestamp)] 拉取远程分支 $local_branch 更新到本地 ..."
+  git pull origin $local_branch
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] 拉取远程分支 $local_branch 更新到本地失败."
+  fi
+  log::success "[$(timestamp)] 成功拉取远程分支 $local_branch 更新到本地."
+
+  if [ -n "$remote_branch" ] && [ "$remote_branch" != "$local_branch" ]; then
+    log::info "[$(timestamp)] 合并远程分支 $remote_branch 更新到本地 ..."
+    git fetch origin $remote_branch
+    if [ "$?" != "0" ]; then
+      log::error "[$(timestamp)] 合并远程分支 $remote_branch 更新到本地失败."
+    fi
+    log::success "[$(timestamp)] 成功合并远程分支 $remote_branch 更新到本地."
+  fi
+}
+
+export -f ta::pull
