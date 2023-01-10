@@ -5,10 +5,14 @@ ta::helloworld() {
 }
 
 ta::prepare() {
+  set +o posix
+
   # if in ci development mode, ignore check
   if [ "$CI" = "true" ]; then
     return
   fi
+
+  log::info "[$(timestamp)] 正在检查开发环境信息完整性 ..."
 
   # ta::auto_update >/dev/null 2>&1 &
 
@@ -144,6 +148,8 @@ ta::prepare() {
   if [ "$(npm config get registry)" != "$PLUGIN_TA_NPM_REGISTRY" ]; then
     npm set registry $PLUGIN_TA_NPM_REGISTRY >>/dev/null
   fi
+
+  log::success "[$(timestamp)] 开发环境信息完整性 ✅ ..."
 }
 
 export -f ta::helloworld
