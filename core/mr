@@ -28,6 +28,10 @@ ta::mr() {
   local key="GITLAB_TOKEN"
   local gitlab_token=$(ta::config ${key})
   if [ "$gitlab_token" = "" ]; then
+    gitlab_token=$(git::get_token "10.27.249.150")
+  fi
+
+  if [ "$gitlab_token" = "" ]; then
     # update git config
     zmicro config git
 
