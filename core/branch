@@ -48,7 +48,7 @@ ta::branch() {
 
   case $branch_type in 
     fix | hotfix)
-      os::inquirer tb_issue_id "text" text "请输入 Teambition 任务 ID（可选）"
+      os::inquirer tb_issue_id "text" "请输入 Teambition 任务 ID（可选）" false
       ;;
   esac
 
