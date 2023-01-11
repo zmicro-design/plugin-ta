@@ -47,8 +47,6 @@ ta::mr() {
     fi
   fi
 
-  echo "gitlab_token: $gitlab_token"
-
   # 设置target branch
   local type=$(echo $current_branch_name | awk -F '/' '{print $1}')
   local target_branch_name="sprint_dev"
