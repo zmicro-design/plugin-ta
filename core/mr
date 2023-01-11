@@ -23,16 +23,27 @@ ta::mr() {
   if [ "$git_repo_group" != "" ]; then
     repo_name="${git_repo_group}%2F${git_repo_project}"
   fi
-  
+
   # 设置gitlab key
   local key="GITLAB_TOKEN"
   local gitlab_token=$(ta::config ${key})
   if [ "$gitlab_token" = "" ]; then
-    log::info "没有发现gitlab token，请打开下面链接获取token"
-    log::info "http://10.27.249.150:8888/profile/personal_access_tokens"
-    os::inquirer gitlab_token "text" "请输入gitlab token" true
-    ta::config $key "$gitlab_token" -g
+    # update git config
+    zmicro config git
+
+    # auto login without create token on gitlab
+    log::info "[$(timestamp)] you are loginning gitlab ..."
+    git clone --depth 1 http://10.27.249.150:8888/thinking-frontend/ta-multiverse /tmp/for_login
+    gitlab_token=$(git::get_token "10.27.249.150")
+    if [ -z "$gitlab_token" ]; then
+      log::info "没有发现gitlab token，请打开下面链接获取token"
+      log::info "http://10.27.249.150:8888/profile/personal_access_tokens"
+      os::inquirer gitlab_token "text" "请输入gitlab token" true
+      ta::config $key "$gitlab_token" -g
+    fi
   fi
+
+  echo "gitlab_token: $gitlab_token"
 
   # 设置target branch
   local type=$(echo $current_branch_name | awk -F '/' '{print $1}')
@@ -53,7 +64,7 @@ ta::mr() {
 
   # 设置请求体
   local tmp_data_file=$(os::tmp_file)
-  cat <<-END > $tmp_data_file
+  cat <<-END >$tmp_data_file
 {
   "target_branch": "${target_branch_name}",
   "source_branch": "${current_branch_name}",
@@ -70,9 +81,9 @@ END
   # 解析mr请求返回体中error信息
   local msg=$(echo $mr_result | awk -F 'message":' '{print $2}')
   if [ "$msg" != "" ]; then
-    local msg2=$(echo $msg |awk -F '401' '{print $2}')
+    local msg2=$(echo $msg | awk -F '401' '{print $2}')
     if [ "$msg2" = "" ]; then
-      local msg3=$(echo $msg |awk -F '}' '{print $1}')
+      local msg3=$(echo $msg | awk -F '}' '{print $1}')
       log::info "MR提交失败:"
       log::info "$msg3"
       return 1
