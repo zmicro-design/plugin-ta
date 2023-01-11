@@ -1,6 +1,6 @@
 PLUGIN_NAME=ta
 PLUGIN_DESCRIPTION="Ta Development CLI"
-PLUGIN_VERSION=v1.6.5
+PLUGIN_VERSION=v1.6.6
 
 DEPENDENCIES=(
   "core-utils@latest"
