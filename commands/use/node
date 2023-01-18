@@ -16,6 +16,7 @@ core() {
   local version="$1"
   if [ -z "$version" ]; then
     log::error "[$(timestamp)] version is required"
+    exit 1
   fi
 
   ta::use node $version
