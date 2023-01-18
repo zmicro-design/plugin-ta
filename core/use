@@ -1,0 +1,33 @@
+#!/bin/bash
+
+ta::use() {
+  local language="$1"
+  local version="$2"
+
+  if [ -z "$language" ]; then
+    log::error "[$(timestamp)] language is required"
+    return 1
+  fi
+
+  if [ -z "$version" ]; then
+    log::error "[$(timestamp)] version is required"
+    return 1
+  fi
+
+  case $language in
+  node)
+    zmicro nvm use $version
+    return 0
+    ;;
+  java)
+    zmicro jvm use $version
+    return 0
+    ;;
+  *)
+    log::error "[$(timestamp)] unsupport langugage: $language"
+    return 1
+    ;;
+  esac
+}
+
+export -f ta::use

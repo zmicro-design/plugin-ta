@@ -1,0 +1,28 @@
+#!/bin/bash
+
+help() {
+  echo "Use - switch nodejs version"
+  echo ""
+  echo "Usage:"
+  echo "  ta use node v16"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  local version="$1"
+  if [ -z "$version" ]; then
+    log::error "[$(timestamp)] version is required"
+  fi
+
+  ta::use node $version
+}
+
+run() {
+  core $@
+}
+
+run $@

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+help() {
+  echo "Use - switch java version"
+  echo ""
+  echo "Usage:"
+  echo "  ta use java openjdk@1.11.0"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  local version="$1"
+  if [ -z "$version" ]; then
+    log::error "[$(timestamp)] version is required"
+    exit 1
+  fi
+
+  ta::use java $version
+}
+
+run() {
+  core $@
+}
+
+run $@
