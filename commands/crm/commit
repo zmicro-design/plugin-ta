@@ -1,0 +1,38 @@
+#!/bin/bash
+
+help() {
+  echo "CRM commit"
+  echo ""
+  echo "Usage:"
+  echo "  ta crm commit"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  # ta::add "$@"
+
+  local current_branch=$(git::branch)
+
+  log::info "current branch: $current_branch"
+
+  log::info "[$(timestamp)] crm commit ..."
+  # 1
+  git add .
+
+  # 2
+  # git commit -m "xxx"
+  gpm commit
+
+  # 3
+  git push origin $current_branch
+}
+
+run() {
+  core $@
+}
+
+run $@
