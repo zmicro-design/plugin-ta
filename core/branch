@@ -60,7 +60,7 @@ ta::branch() {
   log::info "[$(timestamp)] 开始创建分支：$branch_name (upstream: $upstream_branch) ..."
 
   git fetch origin >>/dev/null
-  git checkout -b $branch_name $upstream_branch >>/dev/null 2>$tmp_err
+  git checkout -b $branch_name $upstream_branch --no-track >>/dev/null 2>$tmp_err
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] 创建分支失败！可能本地分支已存在？(1)"
     cat $tmp_err
