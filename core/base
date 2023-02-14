@@ -1,0 +1,8 @@
+#!/bin/bash
+
+ta::hostname() {
+  # plugin::run_nodejs hostname
+  plugin::run_go hostname
+}
+
+export -f ta::hostname
