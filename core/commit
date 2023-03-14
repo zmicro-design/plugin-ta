@@ -159,9 +159,10 @@ ta::commit_push() {
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] 推送代码到远端失败！"
     return 1
+  else 
+    log::success "[$(timestamp)] 推送代码到远端成功！"
   fi
 
-  log::success "[$(timestamp)] 推送代码到远端成功！"
 }
 
 export -f ta:commit
