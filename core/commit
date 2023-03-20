@@ -37,6 +37,8 @@ ta:commit() {
   fi
 }
 
+git status
+
 # 检查是否有未 add 的文件并根据选择 commit
 ta::check_add() {
   local add="add文件并提交"
