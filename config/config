@@ -16,5 +16,3 @@ export PLUGIN_TA_LOCAL_RC=$PWD/.tarc
 
 export PLUGIN_TA_NPM_REGISTRY=https://npm.thinkingdata.cn:3443/
 export PLUGIN_TA_NPM_REGISTRY_ALIAS=td
-
-# export NODE_OPTIONS=--openssl-legacy-provider
