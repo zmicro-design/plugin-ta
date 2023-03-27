@@ -3,6 +3,9 @@
 ta::dev() {
   ta::prepare
 
+  // 修复 4.0 openssl bug
+  export NODE_OPTIONS=--openssl-legacy-provider
+
   # 修复 nx daemon process terminated and closed the connection
   #   https://github.com/nrwl/nx/issues/12237
   #   https://nx.dev/more-concepts/nx-daemon#turning-it-off
