@@ -30,6 +30,8 @@ ta:commit() {
     esac
   done
 
+  git status
+
   if [ -n "$(git status --porcelain)" ]; then
     ta::check_add
   else
@@ -37,7 +39,6 @@ ta:commit() {
   fi
 }
 
-git status
 
 # 检查是否有未 add 的文件并根据选择 commit
 ta::check_add() {
