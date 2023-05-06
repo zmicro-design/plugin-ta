@@ -3,6 +3,9 @@
 ta::dev() {
   ta::prepare
 
+  # 给 dev 添加参数，可以运行不同的环境
+  local dev_env="$1"
+
   # 修复 4.0 openssl bug
   export NODE_OPTIONS="--openssl-legacy-provider"
 
@@ -37,8 +40,14 @@ ta::dev() {
     fi
 
     if [ "$npm_command" = "" ]; then
-      npm run dev --if-present
-      npm run start --if-present
+      # 如果有 dev_env 参数，则启动对应环境
+      if [ "$dev_env" != "" ]; then
+        echo "[$(timestamp)] 开始启动 $dev_env 环境 ..."
+        npm run start:$dev_env --if-present
+      else 
+        npm run dev --if-present
+        npm run start --if-present
+      fi
     else
       npm run "$npm_command"
     fi
