@@ -12,8 +12,14 @@ core() {
     help
     exit 0
   fi
-
-  ta::dev
+  
+  # 给 dev 添加参数，可以运行不同的环境
+  if  [ "$1" = "ta" ] || [ "$1" = "va" ] || [ "$1" = "hermes" ] || [ "$1" = "h5" ] || [ "$1" = "sso" ];  then
+    ta::dev $1
+    exit 0
+  else 
+    ta::dev
+  fi
 }
 
 run() {
