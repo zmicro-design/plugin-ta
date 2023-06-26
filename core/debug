@@ -15,18 +15,23 @@ ta::debug() {
     zmicro package install eunomia-runner-unicom
   fi
 
-  local docker_url=""
+  local frontend=""
+  local frontend_oauth=""
   # common service default port: 8992
-  local api_url="http://127.0.0.1:8992"
+  local backend="http://127.0.0.1:8992"
 
   while [ $# -gt 0 ]; do
     case $1 in
-    --docker)
-      docker_url=$2
+    --docker | --frontend)
+      frontend=$2
       shift 2
       ;;
-    --api)
-      api_url=$2
+    --frontend-oauth)
+      frontend_oauth=$2
+      shift 2
+      ;;
+    --api | --backend)
+      backend=$2
       shift 2
       ;;
     *)
@@ -36,23 +41,28 @@ ta::debug() {
     esac
   done
 
-  if [ "$docker_url" = "" ]; then
+  if [ "$frontend" = "" ]; then
     log::error "docker url is required, please use --docker <url>"
     exit 1
+  fi
+
+  if [ "$frontend_oauth" = "" ]; then
+    frontend_oauth=$frontend
   fi
 
   log::info "##################################"
   log::info "#           TA DEBUG             #"
   log::info "##################################"
   log::info "######## DEBUG INFO START ########"
-  log::info "# docker_url: $docker_url"
-  log::info "# api_url: $api_url"
+  log::info "# frontend: $frontend"
+  log::info "# frontend_oauth: $frontend_oauth"
+  log::info "# backend: $backend"
   log::info "######## DEBUG INFO END ########"
   echo ""
 
   ta::debug_open_browser >/dev/null &
 
-  eunomia-runner-unicom dev --frontend $docker_url --backend $api_url
+  eunomia-runner-unicom dev --frontend $frontend --backend $backend --frontend-oauth $frontend_oauth
 }
 
 ta::debug_open_browser() {
