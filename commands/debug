@@ -7,12 +7,18 @@ help() {
   echo "  ta debug [args...]"
   echo ""
   echo "Options:"
+  echo "  --frontend <url> frontend url"
+  echo "  --backend <url>  backend url"
+  echo "  --frontend-oauth <url> frontend oauth url"
   echo "  --docker <url>  docker url"
   echo "  --api <url>     api url"
   echo ""
   echo "Examples:"
   echo "  ta debug --docker http://example.com"
   echo "  ta debug --docker http://example1.com --api http://example2.com"
+  echo "  ta debug --frontend http://example.com --backend http://example.com"
+  echo "  ta debug --frontend http://127.0.0.1:10010 --backend http://uat.example.com --frontend-oauth http://preview.example.com"
+  echo "  ta debug --frontend http://127.0.0.1:10010/ --frontend-oauth https://ta.thinkingdata.cn/ --backend https://ta.thinkingdata.cn/"
 }
 
 core() {
