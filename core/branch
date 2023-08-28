@@ -7,15 +7,17 @@ ta::branch() {
 
   local upstream_branch="origin/sprint_dev"
   local available_versions=(
-    4.2 # main
-    4.1 # old
-    4.0 # older
+    4.3 # main
+    4.2 # old
+    4.1 # older
+    4.0
     3.8
     3.7
     3.6
     3.5
   )
   local hotfix_upstreams=(
+    release/4.2
     release/4.1
     release/4.0
     release/3.8
@@ -35,7 +37,7 @@ ta::branch() {
   fi
 
   if [ -z "$branch_version" ]; then
-    os::inquirer branch_version "select" available_versions "请选择 TA 版本（例如：4.1）" true
+    os::inquirer branch_version "select" available_versions "请选择 TA 版本（例如：4.2）" true
   fi
 
   if [ -z "$branch_function" ]; then
