@@ -37,7 +37,7 @@ ta::branch() {
   fi
 
   if [ -z "$branch_version" ]; then
-    os::inquirer branch_version "select" available_versions "请选择 TA 版本（例如：4.2）" true
+    os::inquirer branch_version "select" available_versions "请选择 TA 版本（例如：4.3）" true
   fi
 
   if [ -z "$branch_function" ]; then
