@@ -5,28 +5,12 @@ ta::branch() {
   local branch_version="$2"
   local branch_function="$3"
 
-  local upstream_branch="origin/sprint_dev"
-  local available_versions=(
-    4.3 # main
-    4.2 # old
-    4.1 # older
-    4.0
-    3.8
-    3.7
-    3.6
-    3.5
-  )
-  local hotfix_upstreams=(
-    release/4.2
-    release/4.1
-    release/4.0
-    release/3.8
-    release/3.7
-    release/3.6
-    release/3.5
-  )
-  local tb_issue_id=""
+  local repo_name=$(git::basename)
   local tmp_err=$(os::tmp_file)
+
+  local upstream_branch="origin/master"
+
+  local issue_id=""
 
   log::info "[$(timestamp)] 正在检查分支信息，保证完整性 ..."
   ta::prepare
@@ -36,12 +20,36 @@ ta::branch() {
     os::inquirer branch_type "select" branch_types "请选择分支类型" true
   fi
 
-  if [ -z "$branch_version" ]; then
-    os::inquirer branch_version "select" available_versions "请选择 TA 版本（例如：4.3）" true
+  if [ "$(ta::is_ta_repos $repo_name)" = "true" ]; then
+    local available_versions=(
+      4.3 # main
+      4.2 # old
+      4.1 # older
+      4.0
+      3.8
+      3.7
+      3.6
+      3.5
+    )
+    local hotfix_upstreams=(
+      release/4.2
+      release/4.1
+      release/4.0
+      release/3.8
+      release/3.7
+      release/3.6
+      release/3.5
+    )
+
+    local upstream_branch="origin/sprint_dev"
+
+    if [ -z "$branch_version" ]; then
+      os::inquirer branch_version "select" available_versions "请选择 TA 版本（例如：4.3）" true
+    fi
   fi
 
   if [ -z "$branch_function" ]; then
-    os::inquirer branch_function "text" "请输入 TA 功能（例如：add_user_config）" true
+    os::inquirer branch_function "text" "请输入功能（例如：add_user_config）" true
   fi
 
   if [ "$branch_type" = "hotfix" ]; then
@@ -51,21 +59,25 @@ ta::branch() {
   #   os::inquirer upstream_branch "text" "请输入 Release 上游分支" true
   fi
 
-  case $branch_type in 
-    fix | hotfix)
-      os::inquirer tb_issue_id "text" "请输入 Teambition 任务 ID（可选）" false
-      ;;
+  case $branch_type in
+  fix | hotfix)
+    os::inquirer issue_id "text" "请输入飞书项目任务 ID / GitLab Issue（可选）" false
+    ;;
   esac
 
   local branch_name="${branch_type}/${branch_version}_${branch_function}"
-  if [ -n "$tb_issue_id" ]; then
-    branch_name="${branch_name}_tb_${tb_issue_id}"
+  if [ -z "$branch_version" ]; then
+    branch_name="${branch_type}/${branch_function}"
+  fi
+
+  if [ -n "$issue_id" ]; then
+    branch_name="${branch_name}_issue_${issue_id}"
   fi
 
   log::info "[$(timestamp)] 开始创建分支：$branch_name (upstream: $upstream_branch) ..."
 
-  git fetch origin >>/dev/null
-  git checkout -b $branch_name $upstream_branch --no-track >>/dev/null 2>$tmp_err
+  os::git fetch origin >>/dev/null
+  os::git checkout -b $branch_name $upstream_branch --no-track >>/dev/null 2>$tmp_err
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] 创建分支失败！可能本地分支已存在？(1)"
     cat $tmp_err
@@ -74,7 +86,7 @@ ta::branch() {
 
   # push to remote
   log::success "[$(timestamp)] 正在将分支推送到远程 ..."
-  git push origin $branch_name >>/dev/null 2>$tmp_err
+  os::git push origin $branch_name >>/dev/null 2>$tmp_err
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] 创建分支失败！可能远程分支已被占用？(2)"
     cat $tmp_err
