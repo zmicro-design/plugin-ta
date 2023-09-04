@@ -1,0 +1,24 @@
+#!/bin/bash
+
+ta::is_ta_repos() {
+  local res="false"
+  local repo_name=$1
+
+  if [ -z "$repo_name" ]; then
+    log::error "[$(timestamp)][ta::should_merge_remote] repo_name is required"
+    return 1
+  fi
+
+  local allowed_repos=$(string::split "," $PLUGIN_TA_REPOS)
+
+  for allowed_repo in ${allowed_repos[@]}; do
+    if [ "$allowed_repo" = "$repo_name" ]; then
+      res="true"
+      break
+    fi
+  done
+
+  echo $res
+}
+
+export -f ta::is_ta_repos
