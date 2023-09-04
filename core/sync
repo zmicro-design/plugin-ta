@@ -6,10 +6,10 @@ ta::sync() {
   local repo_name=$(git::basename)
   local branch=$(git::branch)
 
-  # @TODO
-  if [ -z "$upstream_branch" ]; then
-    upstream_branch="sprint_dev"
-  fi
+  # # @TODO
+  # if [ -z "$upstream_branch" ]; then
+  #   upstream_branch="sprint_dev"
+  # fi
 
   ta::merge_remote $upstream_branch
   if [ "$?" != "0" ]; then

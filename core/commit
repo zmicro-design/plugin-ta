@@ -126,6 +126,10 @@ ta::should_merge_remote() {
 ta::merge_remote() {
   local upstream_branch=$1
   if [ -z "$upstream_branch" ]; then
+    upstream_branch="master"
+  fi
+
+  if [ "$(ta::is_ta_repos $repo_name)" = "true" ]; then
     upstream_branch="sprint_dev"
   fi
 
