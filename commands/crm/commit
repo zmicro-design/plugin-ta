@@ -28,7 +28,7 @@ core() {
   gpm commit
 
   # 3
-  git push origin $current_branch
+  os::git push origin $current_branch
 }
 
 run() {

@@ -15,7 +15,7 @@ ta::push() {
     return 1
   fi
 
-  git push origin $branch
+  os::git push origin $branch
 }
 
 export -f ta::push
