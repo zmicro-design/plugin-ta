@@ -22,17 +22,14 @@ ta::branch() {
 
   if [ "$(ta::is_ta_repos $repo_name)" = "true" ]; then
     local available_versions=(
-      5.2 # main
-      5.1 # old
+      6.1 # main
+      6.0 # old
       5.0 # older
-      4.5 
       4.4 
       4.3 
-      4.2
-      4.1
     )
     local hotfix_upstreams=(
-      release/5.1
+      release/6.0
       release/5.0
       release/4.5
       release/4.4
